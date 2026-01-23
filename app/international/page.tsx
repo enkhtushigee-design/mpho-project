@@ -1,10 +1,18 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Trophy, Globe, Search } from "lucide-react";
 
-// 1. Өгөгдлийн сан - Одоогоор зөвхөн IPhO-г бүрэн оруулсан
-const OLYMPIAD_DATA: any = {
+// Датаны бүтцийг тодорхойлж өгснөөр Build алдаанаас сэргийлнэ
+interface Achievement {
+  year: number;
+  name: string;
+  rank: string;
+  award: string;
+}
+
+const OLYMPIAD_DATA: Record<string, Achievement[]> = {
   IPHO: [
     { year: 2025, name: "Batbayar Gurbazar", rank: "80", award: "Silver Medal" },
     { year: 2025, name: "Ichinbat Erkhembayar", rank: "93", award: "Silver Medal" },
@@ -84,12 +92,12 @@ const OLYMPIAD_DATA: any = {
     { year: 2005, name: "Dashdavaa Khureltulga", rank: "195", award: "Honourable Mention" },
     { year: 2004, name: "Otgonbaatar Myagmar", rank: "149", award: "Honourable Mention" },
     { year: 2004, name: "Oidovdorj Gankhuyag", rank: "191", award: "Honourable Mention" },
-    { year: 2004, name: Buyandalai Altansargai, rank: "203", award: "Honourable Mention" },
+    { year: 2004, name: "Buyandalai Altansargai", rank: "203", award: "Honourable Mention" },
     { year: 2002, name: "Norovjav Tegshbayar", rank: "184", award: "Honourable Mention" },
     { year: 1999, name: "Altankhuyag Bilguun", rank: "200", award: "Honourable Mention" },
     { year: 1999, name: "Adiyasuren Altanbileg", rank: "205", award: "Honourable Mention" },
   ],
-  APHO: [], // Өгөгдөлгүй үед хоосон массив
+  APHO: [],
   EUPHO: [],
   IZHO: []
 };
@@ -106,7 +114,7 @@ export default function InternationalPage() {
 
   const getGroupedData = (type: string) => {
     const data = OLYMPIAD_DATA[type] || [];
-    return data.reduce((acc: any, curr: any) => {
+    return data.reduce((acc: Record<number, Achievement[]>, curr: Achievement) => {
       if (!acc[curr.year]) acc[curr.year] = [];
       acc[curr.year].push(curr);
       return acc;
@@ -123,14 +131,14 @@ export default function InternationalPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-slate-50 font-sans">
       <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
               <ArrowLeft size={20} />
             </Link>
-            <h1 className="text-xl font-black tracking-tighter uppercase">Олон улсын амжилт</h1>
+            <h1 className="text-xl font-black tracking-tighter uppercase text-slate-900">Олон улсын амжилт</h1>
           </div>
           <Globe className="text-slate-200" size={24} />
         </div>
@@ -153,7 +161,7 @@ export default function InternationalPage() {
           ))}
         </div>
 
-        <div className="mb-10 text-center md:text-left">
+        <div className="mb-10">
           <div className="inline-block bg-blue-50 text-blue-600 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
             {TYPES.find(t => t.id === activeTab)?.full}
           </div>
@@ -161,32 +169,35 @@ export default function InternationalPage() {
         </div>
 
         <div className="space-y-12">
-          {sortedYears.length > 0 ? sortedYears.map((year) => (
-            <div key={year}>
-              <div className="flex items-center gap-4 mb-5">
-                <div className="text-2xl font-black text-slate-900">{year} он</div>
-                <div className="h-[1px] flex-1 bg-slate-200"></div>
-              </div>
-              <div className="grid grid-cols-1 gap-3">
-                {groupedResults[year].map((res: any, idx: number) => (
-                  <div key={idx} className="bg-white p-6 rounded-[24px] border border-slate-100 flex items-center justify-between hover:border-blue-500 transition-all group">
-                    <div className="flex items-center gap-5">
-                      <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center group-hover:bg-blue-50 transition">
-                        <Trophy className="text-slate-300 group-hover:text-blue-500" size={18} />
+          {sortedYears.length > 0 ? sortedYears.map((yearStr) => {
+            const year = Number(yearStr);
+            return (
+              <div key={year}>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="text-2xl font-black text-slate-900">{year} он</div>
+                  <div className="h-[1px] flex-1 bg-slate-200"></div>
+                </div>
+                <div className="grid grid-cols-1 gap-3">
+                  {groupedResults[year].map((res, idx) => (
+                    <div key={idx} className="bg-white p-6 rounded-[24px] border border-slate-100 flex items-center justify-between hover:border-blue-500 transition-all group">
+                      <div className="flex items-center gap-5">
+                        <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center group-hover:bg-blue-50 transition">
+                          <Trophy className="text-slate-300 group-hover:text-blue-500" size={18} />
+                        </div>
+                        <span className="font-bold text-slate-800 text-lg tracking-tight">{res.name}</span>
                       </div>
-                      <span className="font-bold text-slate-800 text-lg tracking-tight">{res.name}</span>
+                      <div className="flex items-center gap-8">
+                        <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Rank {res.rank}</span>
+                        <span className={`text-xs uppercase tracking-widest ${getAwardStyle(res.award)}`}>
+                          {res.award}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-8">
-                      <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Rank {res.rank}</span>
-                      <span className={`text-xs uppercase tracking-widest ${getAwardStyle(res.award)}`}>
-                        {res.award}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )) : (
+            );
+          }) : (
             <div className="py-24 text-center bg-white rounded-[40px] border border-dashed border-slate-200">
               <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Search className="text-slate-200" size={32} />
