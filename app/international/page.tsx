@@ -1,9 +1,11 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
-import { Medal, Star, ArrowLeft, Trophy } from "lucide-react";
+import { ArrowLeft, Trophy, Globe, Search } from "lucide-react";
 
-export default function InternationalPage() {
-  const rawResults = [
+// 1. Өгөгдлийн сан - Одоогоор зөвхөн IPhO-г бүрэн оруулсан
+const OLYMPIAD_DATA: any = {
+  IPHO: [
     { year: 2025, name: "Batbayar Gurbazar", rank: "80", award: "Silver Medal" },
     { year: 2025, name: "Ichinbat Erkhembayar", rank: "93", award: "Silver Medal" },
     { year: 2025, name: "Munkh-Orgil Munkhtulga", rank: "157", award: "Bronze Medal" },
@@ -82,78 +84,116 @@ export default function InternationalPage() {
     { year: 2005, name: "Dashdavaa Khureltulga", rank: "195", award: "Honourable Mention" },
     { year: 2004, name: "Otgonbaatar Myagmar", rank: "149", award: "Honourable Mention" },
     { year: 2004, name: "Oidovdorj Gankhuyag", rank: "191", award: "Honourable Mention" },
-    { year: 2004, name: "Buyandalai Altansargai", rank: "203", award: "Honourable Mention" },
+    { year: 2004, name: Buyandalai Altansargai, rank: "203", award: "Honourable Mention" },
     { year: 2002, name: "Norovjav Tegshbayar", rank: "184", award: "Honourable Mention" },
     { year: 1999, name: "Altankhuyag Bilguun", rank: "200", award: "Honourable Mention" },
     { year: 1999, name: "Adiyasuren Altanbileg", rank: "205", award: "Honourable Mention" },
-  ];
+  ],
+  APHO: [], // Өгөгдөлгүй үед хоосон массив
+  EUPHO: [],
+  IZHO: []
+};
 
-  // Оноор бүлэглэх логик
-  const groupedResults = rawResults.reduce((acc: any, curr) => {
-    if (!acc[curr.year]) acc[curr.year] = [];
-    acc[curr.year].push(curr);
-    return acc;
-  }, {});
+const TYPES = [
+  { id: 'IPHO', name: 'IPhO', full: 'International Physics Olympiad' },
+  { id: 'APHO', name: 'APhO', full: 'Asian Physics Olympiad' },
+  { id: 'EUPHO', name: 'EuPhO', full: 'European Physics Olympiad' },
+  { id: 'IZHO', name: 'IZhO', full: 'International Zhautykov Olympiad' },
+];
 
-  const years = Object.keys(groupedResults).sort((a, b) => Number(b) - Number(a));
+export default function InternationalPage() {
+  const [activeTab, setActiveTab] = useState('IPHO');
+
+  const getGroupedData = (type: string) => {
+    const data = OLYMPIAD_DATA[type] || [];
+    return data.reduce((acc: any, curr: any) => {
+      if (!acc[curr.year]) acc[curr.year] = [];
+      acc[curr.year].push(curr);
+      return acc;
+    }, {});
+  };
+
+  const groupedResults = getGroupedData(activeTab);
+  const sortedYears = Object.keys(groupedResults).sort((a, b) => Number(b) - Number(a));
 
   const getAwardStyle = (award: string) => {
-    if (award.includes("Silver")) return "text-slate-500 font-bold";
-    if (award.includes("Bronze")) return "text-orange-600 font-bold";
-    if (award.includes("Honourable")) return "text-blue-500 font-bold";
-    return "text-slate-400";
+    if (award.includes("Silver")) return "text-slate-500 font-black";
+    if (award.includes("Bronze")) return "text-orange-600 font-black";
+    return "text-blue-500 font-black";
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 pb-20 font-sans">
-      {/* Navigation */}
+    <main className="min-h-screen bg-slate-50">
       <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-6 py-5 flex items-center gap-4">
-          <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
-            <ArrowLeft size={20} />
-          </Link>
-          <h1 className="text-lg font-black tracking-tight uppercase text-slate-900">IPhO Амжилтын түүх</h1>
+        <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
+              <ArrowLeft size={20} />
+            </Link>
+            <h1 className="text-xl font-black tracking-tighter uppercase">Олон улсын амжилт</h1>
+          </div>
+          <Globe className="text-slate-200" size={24} />
         </div>
       </nav>
 
-      <div className="max-w-4xl mx-auto px-6 pt-12">
-        {/* Header Section */}
-        <div className="mb-12">
-          <h2 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">Individual Results</h2>
-          <p className="text-slate-500 font-medium">Монгол улсын баг тамирчдын олон улсын физикийн олимпиадад үзүүлсэн амжилтууд.</p>
+      <div className="max-w-5xl mx-auto px-6 py-12">
+        <div className="flex flex-wrap gap-2 mb-12 bg-white p-2 rounded-[24px] border border-slate-100 shadow-sm">
+          {TYPES.map((type) => (
+            <button
+              key={type.id}
+              onClick={() => setActiveTab(type.id)}
+              className={`flex-1 min-w-[100px] py-4 rounded-[18px] font-black text-sm transition-all ${
+                activeTab === type.id 
+                ? 'bg-slate-900 text-white shadow-lg' 
+                : 'text-slate-400 hover:bg-slate-50 hover:text-slate-600'
+              }`}
+            >
+              {type.name}
+            </button>
+          ))}
         </div>
 
-        {/* Timeline List */}
-        <div className="space-y-10">
-          {years.map((year) => (
-            <div key={year} className="relative">
-              {/* Year Heading */}
-              <div className="flex items-center gap-4 mb-4">
-                <div className="text-2xl font-black text-blue-600 w-16">{year}</div>
-                <div className="h-[2px] flex-1 bg-slate-200 rounded-full"></div>
-              </div>
+        <div className="mb-10 text-center md:text-left">
+          <div className="inline-block bg-blue-50 text-blue-600 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
+            {TYPES.find(t => t.id === activeTab)?.full}
+          </div>
+          <h2 className="text-4xl font-black text-slate-900 tracking-tighter">Монгол улсын амжилт</h2>
+        </div>
 
-              {/* Contestants in that Year */}
-              <div className="bg-white rounded-[24px] shadow-sm border border-slate-100 overflow-hidden">
-                <div className="divide-y divide-slate-50">
-                  {groupedResults[year].map((res: any, idx: number) => (
-                    <div key={idx} className="p-5 flex items-center justify-between hover:bg-slate-50/50 transition">
-                      <div className="flex items-center gap-4">
-                        <div className="w-2 h-2 rounded-full bg-slate-200"></div>
-                        <span className="font-bold text-slate-800 tracking-tight text-md">{res.name}</span>
+        <div className="space-y-12">
+          {sortedYears.length > 0 ? sortedYears.map((year) => (
+            <div key={year}>
+              <div className="flex items-center gap-4 mb-5">
+                <div className="text-2xl font-black text-slate-900">{year} он</div>
+                <div className="h-[1px] flex-1 bg-slate-200"></div>
+              </div>
+              <div className="grid grid-cols-1 gap-3">
+                {groupedResults[year].map((res: any, idx: number) => (
+                  <div key={idx} className="bg-white p-6 rounded-[24px] border border-slate-100 flex items-center justify-between hover:border-blue-500 transition-all group">
+                    <div className="flex items-center gap-5">
+                      <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center group-hover:bg-blue-50 transition">
+                        <Trophy className="text-slate-300 group-hover:text-blue-500" size={18} />
                       </div>
-                      <div className="flex items-center gap-6">
-                        <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Rank {res.rank}</span>
-                        <span className={`text-sm uppercase tracking-tighter font-black ${getAwardStyle(res.award)}`}>
-                          {res.award}
-                        </span>
-                      </div>
+                      <span className="font-bold text-slate-800 text-lg tracking-tight">{res.name}</span>
                     </div>
-                  ))}
-                </div>
+                    <div className="flex items-center gap-8">
+                      <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Rank {res.rank}</span>
+                      <span className={`text-xs uppercase tracking-widest ${getAwardStyle(res.award)}`}>
+                        {res.award}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="py-24 text-center bg-white rounded-[40px] border border-dashed border-slate-200">
+              <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Search className="text-slate-200" size={32} />
+              </div>
+              <p className="text-slate-400 font-black uppercase tracking-widest text-sm italic">Мэдээлэл удахгүй нэмэгдэнэ.</p>
+            </div>
+          )}
         </div>
       </div>
     </main>
