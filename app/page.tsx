@@ -68,7 +68,7 @@ export default function Home() {
               <Link href="/login" className="block w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold transition">
                 Нэвтрэх
               </Link>
-              <Link href="/signup" className="block w-full border-2 border-gray-200 hover:border-blue-600 hover:text-blue-600 text-gray-700 py-4 rounded-xl font-bold transition">
+              <Link href="/register" className="block w-full border-2 border-gray-200 hover:border-blue-600 hover:text-blue-600 text-gray-700 py-4 rounded-xl font-bold transition">
                 Бүртгүүлэх
               </Link>
             </div>

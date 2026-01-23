@@ -3,12 +3,12 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
-export default function SignUp() {
+export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState("suragch"); // Default утга
+  const [role, setRole] = useState("suragch");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
