@@ -1,86 +1,76 @@
 "use client";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
 export default function Home() {
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    checkUser();
-    
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => authListener.subscription.unsubscribe();
-  }, []);
-
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* 1. Header & Navigation */}
-      <nav className="bg-white border-b py-4 px-6 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <Link href="/" className="text-2xl font-black text-blue-700">MPHO</Link>
-          
-          <div className="flex gap-4 items-center">
-            {user ? (
-              <Link href="/dashboard" className="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-lg">
-                Хянах самбар (Бүртгэл)
-              </Link>
-            ) : (
-              <Link href="/login" className="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-lg">
-                Нэвтрэх / Бүртгүүлэх
-              </Link>
-            )}
+    <main className="min-h-screen bg-white font-sans text-gray-900">
+      {/* 1. Header - Зөвхөн Лого болон цэс */}
+      <nav className="border-b sticky top-0 bg-white/80 backdrop-blur-md z-50">
+        <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
+          <Link href="/" className="text-2xl font-black tracking-tighter text-blue-700">
+            MPHO <span className="text-gray-400 font-light">| ARCHIVE</span>
+          </Link>
+          <div className="hidden md:flex gap-8 text-sm font-bold uppercase tracking-widest text-gray-500">
+            <a href="#news" className="hover:text-blue-600 transition">Мэдээ</a>
+            <a href="#archive" className="hover:text-blue-600 transition">Архив</a>
+            <a href="#about" className="hover:text-blue-600 transition">Тухай</a>
           </div>
         </div>
       </nav>
 
-      {/* 2. Hero Section (Олимпиадын зарлал) */}
-      <section className="bg-blue-700 text-white py-20 px-6 text-center">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl font-black mb-4 uppercase">Монголын Физикийн Олимпиад</h2>
-          <p className="text-blue-100 text-lg mb-8">
-            Олимпиадын бүртгэл эхэллээ. Та бүртгүүлж оролцох эрхээ аваарай.
+      {/* 2. Hero Section - Зарлал */}
+      <section className="bg-gray-50 py-20 px-6 border-b">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
+            Монголын Физикийн Олимпиад
+          </h1>
+          <p className="text-xl text-gray-600 leading-relaxed mb-10 max-w-2xl mx-auto">
+            Физикийн шинжлэх ухааныг сурталчлах, сурагчдын мэдлэгийг сорих улсын хэмжээний хамгийн том олимпиадын мэдээллийн нэгдсэн сан.
           </p>
-          {!user && (
-            <Link href="/register" className="bg-white text-blue-700 px-8 py-3 rounded-2xl font-black text-lg hover:bg-gray-100 transition">
-              ОРОЛЦОХ ЭРХ АВАХ
-            </Link>
-          )}
+          <div className="flex justify-center gap-4">
+            <a href="#archive" className="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black hover:bg-blue-700 transition shadow-xl shadow-blue-100">
+              АРХИВ ҮЗЭХ
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* 3. Архивын хэсэг (Хүн бүрт нээлттэй) */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <h3 className="text-3xl font-black text-gray-900 mb-8">Олимпиадын архив</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[2024, 2023, 2022].map((year) => (
-            <div key={year} className="bg-white p-6 rounded-2xl border border-gray-200 hover:shadow-xl transition cursor-pointer">
-              <div className="text-blue-600 font-black text-2xl mb-2">{year}</div>
-              <p className="text-gray-600 text-sm">Улсын физикийн олимпиадын бүх бодлого, бодолтууд.</p>
-              <button className="mt-4 text-blue-600 font-bold text-xs uppercase tracking-widest hover:underline">Үзэх →</button>
+      {/* 3. Олимпиадын архив - Хүн бүрт нээлттэй */}
+      <section id="archive" className="max-w-6xl mx-auto px-6 py-20">
+        <div className="flex justify-between items-end mb-12">
+          <div>
+            <h2 className="text-3xl font-black mb-2 uppercase italic text-blue-900">Бодлогын сан</h2>
+            <p className="text-gray-500">Оны дарааллаар ангилсан олимпиадын материалууд.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017].map((year) => (
+            <div key={year} className="group p-8 border-2 border-gray-100 rounded-3xl hover:border-blue-500 hover:shadow-2xl transition-all cursor-pointer bg-white">
+              <div className="text-4xl font-black text-gray-200 group-hover:text-blue-100 transition mb-4">{year}</div>
+              <h3 className="text-lg font-bold mb-4">{year} оны Улсын Олимпиад</h3>
+              <div className="space-y-2">
+                <button className="w-full py-2 bg-gray-50 rounded-xl text-xs font-black text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition">БОДЛОГО</button>
+                <button className="w-full py-2 bg-gray-50 rounded-xl text-xs font-black text-gray-500 hover:bg-green-50 hover:text-green-600 transition">БОДОЛТ</button>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 4. Мэдээ мэдээлэл (Хүн бүрт нээлттэй) */}
-      <section className="max-w-6xl mx-auto px-6 pb-20">
-        <h3 className="text-3xl font-black text-gray-900 mb-8">Шинэ мэдээ</h3>
-        <div className="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col md:flex-row gap-8 items-center">
-          <div className="w-full md:w-1/3 bg-gray-100 aspect-video rounded-2xl flex items-center justify-center font-bold text-gray-400">Зураг</div>
-          <div className="flex-1">
-            <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-black uppercase">Шинэ</span>
-            <h4 className="text-2xl font-bold mt-4 mb-2 italic text-gray-800">2026 оны Улсын олимпиад зохион байгуулагдах хуваарь гарлаа</h4>
-            <p className="text-gray-500">Улаанбаатар хотод болох олимпиадын ерөнхий хуваарь...</p>
+      {/* 4. Footer */}
+      <footer className="bg-gray-900 text-white py-12 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div>
+            <div className="text-2xl font-black mb-2">MPHO</div>
+            <p className="text-gray-500 text-sm">© 2026 Монголын Физикийн Олимпиад. Бүх эрх хуулиар хамгаалагдсан.</p>
+          </div>
+          <div className="flex gap-6 text-sm font-bold text-gray-400">
+            <a href="#" className="hover:text-white transition">Фэйсбүүк</a>
+            <a href="#" className="hover:text-white transition">Холбоо барих</a>
           </div>
         </div>
-      </section>
+      </footer>
     </main>
   );
 }
