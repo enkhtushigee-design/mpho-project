@@ -31,75 +31,63 @@ export default function Home() {
     router.refresh();
   };
 
-  // Админ мөн эсэхийг маш тодорхой шалгах
   const isAdmin = user?.user_metadata?.user_role === 'admin';
 
   if (loading) return <div className="flex items-center justify-center min-h-screen text-gray-500">Уншиж байна...</div>;
 
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="max-w-sm w-full bg-white p-10 rounded-3xl shadow-2xl text-center border border-gray-100">
-        {user ? (
-          <>
-            {/* Багш/Сурагч/Админ статусыг харуулах */}
-            <div className="mb-4 flex flex-col items-center gap-2">
-              {isAdmin && (
-                <span className="bg-red-100 text-red-700 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider border border-red-200">
-                  Систем Админ 🛠️
-                </span>
-              )}
-              
-              {!isAdmin && user.user_metadata?.user_role === 'teacher' && (
-                <span className="bg-green-100 text-green-700 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider border border-green-200">
-                  Багш 👨‍🏫
-                </span>
-              )}
-              
-              {!isAdmin && user.user_metadata?.user_role === 'suragch' && (
-                <span className="bg-blue-100 text-blue-700 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider border border-blue-200">
-                  Сурагч 📖
-                </span>
-              )}
+    <main className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
+      
+      {/* 1. Header Хэсэг (Нэвтрэх эсвэл Хэрэглэгчийн мэдээлэл харуулах) */}
+      <div className="max-w-4xl w-full bg-white p-6 rounded-2xl shadow-md mb-6 flex justify-between items-center">
+        <h1 className="text-xl font-bold text-blue-600">Minii Archive</h1>
+        
+        <div>
+          {user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium text-gray-700">
+                {user.user_metadata?.user_role === 'admin' ? "🛠️ Админ" : 
+                 user.user_metadata?.user_role === 'teacher' ? "👨‍🏫 Багш" : "📖 Сурагч"}
+              </span>
+              <button onClick={handleSignOut} className="text-red-500 text-sm font-bold border border-red-200 px-3 py-1 rounded-lg hover:bg-red-50">
+                Гарах
+              </button>
             </div>
+          ) : (
+            <div className="flex gap-2">
+              <Link href="/login" className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg font-bold">Нэвтрэх</Link>
+              <Link href="/register" className="text-sm border border-gray-200 px-4 py-2 rounded-lg font-bold text-gray-600">Бүртгүүлэх</Link>
+            </div>
+          )}
+        </div>
+      </div>
 
-            <h1 className="text-3xl font-extrabold text-gray-900 mb-2 leading-tight">
-              {isAdmin ? "Удирдах хэсэг" : "Сайн байна уу?"}
-            </h1>
-            <p className="text-lg text-gray-700 font-medium mb-8">
-              {user.user_metadata?.full_name || user.email}
-            </p>
-
-            {/* ЗӨВХӨН АДМИНД ХАРАГДАХ ТОВЧЛУУР */}
-            {isAdmin && (
-              <div className="mb-6 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-                <p className="text-xs text-yellow-700 font-bold mb-2">АДМИНЫ ЦЭС</p>
-                <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg font-bold text-sm transition">
-                  Хэрэглэгчид удирдах
-                </button>
-              </div>
-            )}
-
-            <button 
-              onClick={handleSignOut}
-              className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl transition duration-300 font-bold"
-            >
-              Гарах
-            </button>
-          </>
-        ) : (
-          <div className="space-y-6">
-            <h1 className="text-3xl font-black text-gray-900 mb-4">Тавтай морил</h1>
-            <div className="space-y-3">
-              <Link href="/login" className="block w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold transition text-center">
-                Нэвтрэх
-              </Link>
-              <Link href="/register" className="block w-full border-2 border-gray-200 hover:border-blue-600 hover:text-blue-600 text-gray-700 py-4 rounded-xl font-bold transition text-center">
-                Бүртгүүлэх
-              </Link>
+      {/* 2. Төв хэсэг (Архив - БҮХ ХҮНД ХАРАГДАНА) */}
+      <div className="max-w-4xl w-full">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+          <h2 className="text-2xl font-black text-gray-900 mb-6">Нийтийн Архив</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Жишээ архив картууд */}
+            <div className="p-4 border border-gray-100 rounded-xl bg-gray-50 hover:shadow-md transition cursor-pointer">
+              <h3 className="font-bold text-gray-800">Математикийн хичээл #1</h3>
+              <p className="text-sm text-gray-500">Оруулсан: Багш Бат</p>
+            </div>
+            <div className="p-4 border border-gray-100 rounded-xl bg-gray-50 hover:shadow-md transition cursor-pointer">
+              <h3 className="font-bold text-gray-800">Монгол хэл - Эссэ бичих</h3>
+              <p className="text-sm text-gray-500">Оруулсан: Багш Болд</p>
             </div>
           </div>
-        )}
+
+          {/* Хэрэв админ бол нэмэлт товч харагдана */}
+          {isAdmin && (
+            <button className="mt-8 w-full bg-yellow-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-yellow-100">
+              + Шинэ архив нэмэх (Админ)
+            </button>
+          )}
+        </div>
       </div>
+
     </main>
   );
 }
