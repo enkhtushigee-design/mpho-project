@@ -38,7 +38,7 @@ export default function ArchivePage() {
           <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
             <ArrowLeft size={20} />
           </Link>
-          <h1 className="text-xl font-black tracking-tighter uppercase text-slate-900">Архив</h1>
+          <h1 className="text-xl font-black tracking-tighter uppercase text-slate-900">ОЛИМПИАДЫН АРХИВ</h1>
         </div>
       </nav>
 
