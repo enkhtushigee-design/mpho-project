@@ -50,14 +50,15 @@ export default function ArchivePage() {
     } else {
       setFilteredCategories(allCategories);
     }
-    setSelectedCategory("");
+    // Төрөл солигдоход ангиллыг автоматаар цэвэрлэхгүй, харин баазаас хайлт хийх боломжийг хадгална
   }, [selectedType, allCategories, types]);
 
   useEffect(() => {
     async function getArchive() {
       if (selectedYear && selectedType && selectedCategory) {
         setLoading(true);
-        console.log("Searching for:", { selectedYear, selectedType, selectedCategory }); // Debugging
+        
+        // Маш чухал: Шүүлтүүрийг EQ (Equal) ашиглан шалгах
         const { data, error } = await supabase
           .from('archive')
           .select('*')
@@ -65,59 +66,70 @@ export default function ArchivePage() {
           .eq('type_id', selectedType)
           .eq('category_id', selectedCategory);
         
-        if (error) console.error("Supabase Error:", error);
-        setResultData(data && data.length > 0 ? data[0] : null);
+        if (error) {
+          console.error("QUERY ERROR:", error.message);
+        }
+
+        if (data && data.length > 0) {
+          setResultData(data[0]);
+        } else {
+          setResultData(null);
+          console.log("No data found for these IDs in Supabase");
+        }
         setLoading(false);
-      } else {
-        setResultData(null);
       }
     }
     getArchive();
   }, [selectedYear, selectedType, selectedCategory]);
 
   return (
-    <main className="min-h-screen bg-slate-50 font-sans pb-20">
+    <main className="min-h-screen bg-slate-50 pb-20 font-sans">
       <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center gap-4">
           <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
             <ArrowLeft size={20} />
           </Link>
-          <h1 className="text-xl font-black tracking-tighter uppercase text-slate-900">Архив</h1>
+          <h1 className="text-xl font-black tracking-tighter uppercase text-slate-900 italic">Архив</h1>
         </div>
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 pt-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <FilterBox icon={<Calendar size={18} />} label="Хичээлийн жил" color="text-blue-600">
-            <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="w-full p-4 bg-slate-50 rounded-2xl border-none outline-none font-bold text-slate-700 cursor-pointer appearance-none">
+          <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+            <label className="text-[10px] font-black uppercase tracking-widest text-blue-600 block mb-4">Хичээлийн жил</label>
+            <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="w-full p-4 bg-slate-50 rounded-2xl border-none font-bold text-slate-700 outline-none">
               <option value="">Сонгох...</option>
               {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
             </select>
-          </FilterBox>
+          </div>
 
-          <FilterBox icon={<Layers size={18} />} label="Төрөл" color="text-purple-600" disabled={!selectedYear}>
-            <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} className="w-full p-4 bg-slate-50 rounded-2xl border-none outline-none font-bold text-slate-700 cursor-pointer appearance-none">
+          <div className={`bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm ${!selectedYear && 'opacity-40 pointer-events-none'}`}>
+            <label className="text-[10px] font-black uppercase tracking-widest text-purple-600 block mb-4">Олимпиадын төрөл</label>
+            <select value={selectedType} onChange={(e) => { setSelectedType(e.target.value); setSelectedCategory(""); }} className="w-full p-4 bg-slate-50 rounded-2xl border-none font-bold text-slate-700 outline-none">
               <option value="">Сонгох...</option>
               {types.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
-          </FilterBox>
+          </div>
 
-          <FilterBox icon={<Users size={18} />} label="Ангилал" color="text-orange-600" disabled={!selectedType}>
+          <div className={`bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm ${!selectedType && 'opacity-40 pointer-events-none'}`}>
+            <label className="text-[10px] font-black uppercase tracking-widest text-orange-600 block mb-4">Ангилал</label>
             <div className="grid grid-cols-2 gap-2">
               {filteredCategories.map(c => (
-                <button key={c.id} onClick={() => setSelectedCategory(c.id)} className={`py-2 px-3 rounded-xl text-[11px] font-black transition-all ${selectedCategory === c.id ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400'}`}>{c.name}</button>
+                <button key={c.id} onClick={() => setSelectedCategory(c.id)} className={`py-2 px-3 rounded-xl text-[11px] font-black transition-all ${selectedCategory === c.id ? 'bg-slate-900 text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}>
+                  {c.name}
+                </button>
               ))}
             </div>
-          </FilterBox>
+          </div>
         </div>
 
         <div className="space-y-6">
           {loading ? (
             <div className="py-24 flex justify-center"><Loader2 className="animate-spin text-blue-500" size={40} /></div>
           ) : selectedCategory ? (
-            <div className="animate-in fade-in slide-in-from-bottom-4">
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center gap-4 mb-8">
-                <h3 className="text-2xl font-black text-slate-900 uppercase italic">
+                <h3 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">
                   {selectedYear} — {types.find(t => t.id === selectedType)?.name}
                 </h3>
                 <div className="h-[2px] flex-1 bg-slate-100"></div>
@@ -131,31 +143,19 @@ export default function ArchivePage() {
                 </div>
               ) : (
                 <div className="py-20 text-center bg-white rounded-[40px] border border-slate-100">
-                  <p className="text-slate-400 font-bold uppercase tracking-widest italic">Энэ ангилалд мэдээлэл хараахан ороогүй байна.</p>
+                  <p className="text-slate-400 font-bold uppercase tracking-widest text-sm italic">Уучлаарай, энэ ангилалд мэдээлэл байхгүй байна.</p>
                 </div>
               )}
             </div>
           ) : (
             <div className="py-24 text-center bg-white rounded-[48px] border-2 border-dashed border-slate-100">
               <Search className="text-slate-200 mx-auto mb-6" size={32} />
-              <p className="text-slate-400 font-bold uppercase tracking-widest text-sm text-slate-300">Сонголт хийнэ үү</p>
+              <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Дээрх шүүлтүүрийг ашиглан материалаа сонгоно уу</p>
             </div>
           )}
         </div>
       </div>
     </main>
-  );
-}
-
-function FilterBox({ children, icon, label, color, disabled }: any) {
-  return (
-    <div className={`bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm transition-all ${disabled ? 'opacity-40 pointer-events-none' : ''}`}>
-      <div className={`flex items-center gap-3 mb-4 ${color}`}>
-        {icon}
-        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{label}</span>
-      </div>
-      {children}
-    </div>
   );
 }
 
@@ -167,10 +167,10 @@ function FileCard({ title, icon, url, color }: any) {
   };
 
   if (!url) return (
-    <div className="bg-slate-50 p-10 rounded-[40px] border border-slate-100 opacity-50 grayscale flex flex-col items-center justify-center">
+    <div className="bg-slate-50 p-10 rounded-[40px] border border-slate-100 opacity-40 grayscale flex flex-col items-center justify-center">
       <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 bg-slate-200 text-slate-400">{icon}</div>
       <h4 className="text-2xl font-black text-slate-300 mb-2">{title}</h4>
-      <p className="text-slate-300 font-medium text-sm italic">Байхгүй</p>
+      <p className="text-slate-300 font-medium text-xs">Мэдээлэл байхгүй</p>
     </div>
   );
 
@@ -178,7 +178,7 @@ function FileCard({ title, icon, url, color }: any) {
     <a href={url} target="_blank" rel="noopener noreferrer" className="group bg-white p-10 rounded-[40px] border border-slate-100 hover:border-slate-900 hover:shadow-2xl transition-all relative overflow-hidden">
       <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-all duration-300 ${colors[color]} group-hover:text-white`}>{icon}</div>
       <h4 className="text-2xl font-black text-slate-900 mb-2">{title}</h4>
-      <p className="text-slate-400 font-medium text-sm flex items-center gap-2">PDF үзэх <ChevronRight size={14} /></p>
+      <p className="text-slate-400 font-medium text-sm flex items-center gap-2">PDF ҮЗЭХ <ChevronRight size={14} /></p>
     </a>
   );
 }
