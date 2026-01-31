@@ -7,7 +7,6 @@ import {
   ChevronRight, Calendar, Layers, Users, Search 
 } from "lucide-react";
 
-// 1. Тогтмол өгөгдлүүд
 const YEARS = [
   "2025-2026 он", "2024-2025 он", "2023-2024 он", "2022-2023 он", 
   "2021-2022 он", "2020-2021 он", "2019-2020 он", "2018-2019 он",
@@ -26,8 +25,6 @@ export default function ArchivePage() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  // Ирээдүйд Supabase-ээс ирэх өгөгдлийг орлох "Жишээ" өгөгдөл
-  // file_url нь хоосон байвал "Байхгүй" гэж харагдана
   const mockData = {
     problem_url: "#",
     solution_url: "#",
@@ -36,26 +33,19 @@ export default function ArchivePage() {
 
   return (
     <main className="min-h-screen bg-slate-50 font-sans pb-20">
-      {/* Navigation */}
       <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center gap-4">
           <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
             <ArrowLeft size={20} />
           </Link>
-          <h1 className="text-xl font-black tracking-tighter uppercase text-slate-900">Олимпиадын Архив</h1>
+          <h1 className="text-xl font-black tracking-tighter uppercase text-slate-900">Архив</h1>
         </div>
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 pt-12">
-        <div className="mb-12">
-          <h2 className="text-4xl font-black text-slate-900 tracking-tighter mb-2 italic">МАТЕРИАЛЫН САН</h2>
-          <p className="text-slate-500 font-medium">Онол, туршилтын бодлого, бодолт болон нэгдсэн дүнгүүд.</p>
-        </div>
-
-        {/* Шүүлтүүрүүд */}
+        {/* Шүүлтүүрүүд - Гарчиггүй шууд эхэлнэ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           
-          {/* 1. Жил сонгох */}
           <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
             <div className="flex items-center gap-3 mb-4 text-blue-600">
               <Calendar size={18} />
@@ -71,7 +61,6 @@ export default function ArchivePage() {
             </select>
           </div>
 
-          {/* 2. Төрөл сонгох */}
           <div className={`bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm transition-opacity ${!selectedYear && 'opacity-40 pointer-events-none'}`}>
             <div className="flex items-center gap-3 mb-4 text-purple-600">
               <Layers size={18} />
@@ -87,7 +76,6 @@ export default function ArchivePage() {
             </select>
           </div>
 
-          {/* 3. Ангилал сонгох */}
           <div className={`bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm transition-opacity ${!selectedType && 'opacity-40 pointer-events-none'}`}>
             <div className="flex items-center gap-3 mb-4 text-orange-600">
               <Users size={18} />
@@ -111,13 +99,12 @@ export default function ArchivePage() {
           </div>
         </div>
 
-        {/* Үр дүн харуулах хэсэг */}
         <div className="space-y-6">
           {selectedCategory ? (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center gap-4 mb-8">
-                <h3 className="text-2xl font-black text-slate-900 uppercase italic">
-                  {selectedYear} | {selectedType} | {selectedCategory}
+                <h3 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">
+                  {selectedYear} — {selectedType} — {selectedCategory}
                 </h3>
                 <div className="h-[2px] flex-1 bg-slate-100"></div>
               </div>
@@ -133,7 +120,7 @@ export default function ArchivePage() {
               <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Search className="text-slate-200" size={32} />
               </div>
-              <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">Дээрх шүүлтүүрийг ашиглан материалаа сонгоно уу</p>
+              <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">Сонголт хийнэ үү</p>
             </div>
           )}
         </div>
@@ -142,29 +129,26 @@ export default function ArchivePage() {
   );
 }
 
-// Туслах Card компонент
 function FileCard({ title, icon, url, color }: any) {
   const colors: any = {
-    blue: "bg-blue-50 text-blue-500 hover:bg-blue-500 group-hover:text-white",
-    green: "bg-green-50 text-green-500 hover:bg-green-500 group-hover:text-white",
-    orange: "bg-orange-50 text-orange-500 hover:bg-orange-500 group-hover:text-white"
+    blue: "bg-blue-50 text-blue-500 hover:bg-blue-500",
+    green: "bg-green-50 text-green-500 hover:bg-green-500",
+    orange: "bg-orange-50 text-orange-500 hover:bg-orange-500"
   };
 
   return (
     <a 
       href={url} 
       target="_blank" 
-      className="group bg-white p-10 rounded-[40px] border border-slate-100 hover:border-slate-900 hover:shadow-2xl hover:shadow-slate-200 transition-all relative overflow-hidden"
+      className="group bg-white p-10 rounded-[40px] border border-slate-100 hover:border-slate-900 hover:shadow-2xl transition-all relative overflow-hidden"
     >
-      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-all duration-300 ${colors[color]}`}>
+      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-all duration-300 ${colors[color]} group-hover:text-white`}>
         {icon}
       </div>
       <h4 className="text-2xl font-black text-slate-900 mb-2">{title}</h4>
       <p className="text-slate-400 font-medium text-sm flex items-center gap-2">
-        Файлыг нээх (PDF) <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+        PDF үзэх <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
       </p>
-      
-      {/* Чимэглэлийн эффект */}
       <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
         {icon}
       </div>
