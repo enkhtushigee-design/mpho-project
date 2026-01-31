@@ -1,126 +1,173 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { FileDown, Loader2, Search } from 'lucide-react';
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { 
+  ArrowLeft, FileText, CheckCircle, Trophy, 
+  ChevronRight, Calendar, Layers, Users, Search 
+} from "lucide-react";
+
+// 1. Тогтмол өгөгдлүүд
+const YEARS = [
+  "2025-2026 он", "2024-2025 он", "2023-2024 он", "2022-2023 он", 
+  "2021-2022 он", "2020-2021 он", "2019-2020 он", "2018-2019 он",
+  "2017-2018 он", "2016-2017 он", "2015-2016 он", "2014-2015 он"
+];
+
+const TYPES = [
+  "Улс", "Нийслэл", "Аймаг, дүүрэг", "Баруун бүс", "Зүүн бүс", 
+  "Хойд бүс", "Төвийн бүс", "Их сорил", "Шигшээ сорилго", "МУГБ Ц.Хандын нэрэмжит"
+];
+
+const CATEGORIES = ["7-р анги", "8-р анги", "9-р анги", "10-р анги", "11-р анги", "12-р анги", "Багш"];
 
 export default function ArchivePage() {
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  
-  // Анхны утгыг хичээлийн жилээр тохирууллаа
-  const [selectedYear, setSelectedYear] = useState('2024-2025');
-  const [selectedType, setSelectedType] = useState('Улс');
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  const olympicTypes = [
-    'Улс', 'Нийслэл', 'Аймаг, дүүрэг', 'Баруун бүс', 
-    'Зүүн бүс', 'Хойд бүс', 'Төвийн бүс', 
-    'Их сорил', 'Шигшээ сорилго', 'МУГБ Ц.Хандын нэрэмжит'
-  ];
-
-  useEffect(() => {
-    async function fetchArchive() {
-      setLoading(true);
-      const { data: results, error } = await supabase
-        .from('archive')
-        .select(`
-          grade, problem_url, solution_url,
-          olympiads!inner(year, olympic_types!inner(name))
-        `)
-        .eq('olympiads.year', selectedYear)
-        .eq('olympiads.olympiad_types.name', selectedType);
-
-      if (!error) setData(results || []);
-      setLoading(false);
-    }
-    fetchArchive();
-  }, [selectedYear, selectedType]);
+  // Ирээдүйд Supabase-ээс ирэх өгөгдлийг орлох "Жишээ" өгөгдөл
+  // file_url нь хоосон байвал "Байхгүй" гэж харагдана
+  const mockData = {
+    problem_url: "#",
+    solution_url: "#",
+    result_url: "#",
+  };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-10">
-          <h1 className="text-4xl font-black text-slate-900 mb-2 tracking-tight uppercase">Олимпиадын архив</h1>
-          <p className="text-slate-500 font-medium text-lg italic tracking-wide">MPHO - Mongolian Physics Olympiad</p>
+    <main className="min-h-screen bg-slate-50 font-sans pb-20">
+      {/* Navigation */}
+      <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 py-5 flex items-center gap-4">
+          <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
+            <ArrowLeft size={20} />
+          </Link>
+          <h1 className="text-xl font-black tracking-tighter uppercase text-slate-900">Олимпиадын Архив</h1>
+        </div>
+      </nav>
+
+      <div className="max-w-6xl mx-auto px-6 pt-12">
+        <div className="mb-12">
+          <h2 className="text-4xl font-black text-slate-900 tracking-tighter mb-2 italic">МАТЕРИАЛЫН САН</h2>
+          <p className="text-slate-500 font-medium">Онол, туршилтын бодлого, бодолт болон нэгдсэн дүнгүүд.</p>
         </div>
 
-        {/* Шүүлтүүр хэсэг */}
-        <div className="flex flex-col gap-8 mb-10">
-          <div className="flex items-center gap-6">
-            <div className="flex flex-col gap-2">
-              <span className="font-bold text-slate-400 uppercase text-xs tracking-[0.2em]">Хичээлийн жил:</span>
-              <select 
-                className="p-4 bg-white rounded-2xl border-2 border-slate-100 shadow-sm font-bold text-slate-800 outline-none focus:border-blue-500 transition-all min-w-[200px] text-lg"
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-              >
-                {[...Array(26)].map((_, i) => {
-                  const startYear = 2025 - i;
-                  const endYear = startYear + 1;
-                  const academicYear = `${startYear}-${endYear}`;
-                  return <option key={academicYear} value={academicYear}>{academicYear} он</option>;
-                })}
-              </select>
+        {/* Шүүлтүүрүүд */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          
+          {/* 1. Жил сонгох */}
+          <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+            <div className="flex items-center gap-3 mb-4 text-blue-600">
+              <Calendar size={18} />
+              <span className="text-[10px] font-black uppercase tracking-widest">Хичээлийн жил</span>
             </div>
+            <select 
+              value={selectedYear}
+              onChange={(e) => { setSelectedYear(e.target.value); setSelectedType(""); setSelectedCategory(""); }}
+              className="w-full p-4 bg-slate-50 rounded-2xl border-none outline-none font-bold text-slate-700 appearance-none cursor-pointer"
+            >
+              <option value="">Сонгох...</option>
+              {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <span className="font-bold text-slate-400 uppercase text-xs tracking-[0.2em]">Олимпиадын төрөл:</span>
-            <div className="flex flex-wrap gap-3 bg-slate-200/40 p-3 rounded-[28px] border border-slate-200/50">
-              {olympicTypes.map((t) => (
+          {/* 2. Төрөл сонгох */}
+          <div className={`bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm transition-opacity ${!selectedYear && 'opacity-40 pointer-events-none'}`}>
+            <div className="flex items-center gap-3 mb-4 text-purple-600">
+              <Layers size={18} />
+              <span className="text-[10px] font-black uppercase tracking-widest">Олимпиадын төрөл</span>
+            </div>
+            <select 
+              value={selectedType}
+              onChange={(e) => { setSelectedType(e.target.value); setSelectedCategory(""); }}
+              className="w-full p-4 bg-slate-50 rounded-2xl border-none outline-none font-bold text-slate-700 appearance-none cursor-pointer"
+            >
+              <option value="">Сонгох...</option>
+              {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+
+          {/* 3. Ангилал сонгох */}
+          <div className={`bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm transition-opacity ${!selectedType && 'opacity-40 pointer-events-none'}`}>
+            <div className="flex items-center gap-3 mb-4 text-orange-600">
+              <Users size={18} />
+              <span className="text-[10px] font-black uppercase tracking-widest">Ангилал</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {CATEGORIES.map(c => (
                 <button
-                  key={t}
-                  onClick={() => setSelectedType(t)}
-                  className={`px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 ${
-                    selectedType === t 
-                    ? 'bg-white text-blue-600 shadow-xl scale-105 ring-1 ring-slate-100' 
-                    : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'
+                  key={c}
+                  onClick={() => setSelectedCategory(c)}
+                  className={`py-2 px-3 rounded-xl text-[11px] font-black transition-all ${
+                    selectedCategory === c 
+                    ? 'bg-slate-900 text-white shadow-lg' 
+                    : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600'
                   }`}
                 >
-                  {t}
+                  {c}
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Дата харуулах хэсэг */}
-        <div className="bg-white rounded-[40px] shadow-2xl shadow-slate-200/50 overflow-hidden border border-slate-100">
-          {loading ? (
-            <div className="p-32 flex flex-col items-center gap-6 text-blue-600">
-              <Loader2 className="animate-spin" size={56} />
-              <p className="font-black text-slate-400 tracking-widest">ӨГӨГДӨЛТЭЙ ХОЛБОГДОЖ БАЙНА...</p>
-            </div>
-          ) : data.length > 0 ? (
-            <div className="divide-y divide-slate-50">
-              {data.map((item, idx) => (
-                <div key={idx} className="p-10 hover:bg-blue-50/20 transition-all flex items-center justify-between group">
-                  <div>
-                    <span className="text-xs font-black text-blue-500 uppercase tracking-[0.3em] mb-2 block">{selectedType}</span>
-                    <h3 className="text-3xl font-black text-slate-800 italic">{item.grade} анги</h3>
-                  </div>
-                  <div className="flex gap-4">
-                    <a 
-                      href={item.problem_url} 
-                      target="_blank"
-                      className="flex items-center gap-3 bg-slate-900 text-white px-10 py-4 rounded-[22px] font-bold hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-200 hover:-translate-y-1"
-                    >
-                      <FileDown size={22} /> БОДЛОГО ҮЗЭХ
-                    </a>
-                  </div>
-                </div>
-              ))}
+        {/* Үр дүн харуулах хэсэг */}
+        <div className="space-y-6">
+          {selectedCategory ? (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="flex items-center gap-4 mb-8">
+                <h3 className="text-2xl font-black text-slate-900 uppercase italic">
+                  {selectedYear} | {selectedType} | {selectedCategory}
+                </h3>
+                <div className="h-[2px] flex-1 bg-slate-100"></div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <FileCard title="Бодлого" icon={<FileText size={24} />} url={mockData.problem_url} color="blue" />
+                <FileCard title="Бодолт" icon={<CheckCircle size={24} />} url={mockData.solution_url} color="green" />
+                <FileCard title="Нэгдсэн дүн" icon={<Trophy size={24} />} url={mockData.result_url} color="orange" />
+              </div>
             </div>
           ) : (
-            <div className="p-32 text-center">
-              <div className="bg-slate-50 w-28 h-28 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
-                <Search size={44} className="text-slate-200" />
+            <div className="py-24 text-center bg-white rounded-[48px] border-2 border-dashed border-slate-100">
+              <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Search className="text-slate-200" size={32} />
               </div>
-              <p className="text-2xl font-bold text-slate-300 italic mb-2">{selectedYear} он</p>
-              <p className="text-xl font-bold text-slate-400 italic">"{selectedType}" ангилалд одоогоор материал ороогүй байна.</p>
+              <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">Дээрх шүүлтүүрийг ашиглан материалаа сонгоно уу</p>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </main>
+  );
+}
+
+// Туслах Card компонент
+function FileCard({ title, icon, url, color }: any) {
+  const colors: any = {
+    blue: "bg-blue-50 text-blue-500 hover:bg-blue-500 group-hover:text-white",
+    green: "bg-green-50 text-green-500 hover:bg-green-500 group-hover:text-white",
+    orange: "bg-orange-50 text-orange-500 hover:bg-orange-500 group-hover:text-white"
+  };
+
+  return (
+    <a 
+      href={url} 
+      target="_blank" 
+      className="group bg-white p-10 rounded-[40px] border border-slate-100 hover:border-slate-900 hover:shadow-2xl hover:shadow-slate-200 transition-all relative overflow-hidden"
+    >
+      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-all duration-300 ${colors[color]}`}>
+        {icon}
+      </div>
+      <h4 className="text-2xl font-black text-slate-900 mb-2">{title}</h4>
+      <p className="text-slate-400 font-medium text-sm flex items-center gap-2">
+        Файлыг нээх (PDF) <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+      </p>
+      
+      {/* Чимэглэлийн эффект */}
+      <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+        {icon}
+      </div>
+    </a>
   );
 }
