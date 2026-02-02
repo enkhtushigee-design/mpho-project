@@ -13,13 +13,16 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Language>('mn');
+  const [mounted, setMounted] = useState(false);
 
-  // Хөтөч дээр хадгалагдсан хэл байгаа эсэхийг шалгах
   useEffect(() => {
     const savedLang = localStorage.getItem('lang') as Language;
-    if (savedLang) setLangState(savedLang);
+    if (savedLang && (savedLang === 'mn' || savedLang === 'en')) {
+      setLangState(savedLang);
+    }
+    setMounted(true);
   }, []);
 
   const setLang = (newLang: Language) => {
@@ -27,26 +30,34 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     localStorage.setItem('lang', newLang);
   };
 
-  // Текстийг замаар нь (жишээ нь: "nav.archive") олж авах функц
   const t = (path: string) => {
     const keys = path.split('.');
     let result: any = translations[lang];
+    
     for (const key of keys) {
-      if (result[key]) result = result[key];
-      else return path; // Хэрэв олдохгүй бол замыг нь буцаана
+      if (result && result[key]) {
+        result = result[key];
+      } else {
+        return path; 
+      }
     }
     return result;
   };
+
+  // Hydration error-оос сэргийлэх (Vercel Build-д чухал)
+  if (!mounted) return <>{children}</>;
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, t }}>
       {children}
     </LanguageContext.Provider>
   );
-};
+}
 
-export const useLanguage = () => {
+export function useLanguage() {
   const context = useContext(LanguageContext);
-  if (!context) throw new Error('useLanguage must be used within LanguageProvider');
+  if (context === undefined) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
   return context;
-};
+}
