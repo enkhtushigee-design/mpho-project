@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
   title: "Physics Olympiad Mongolia",
-  description: "Physics Olympiad resources, archive and news",
+  description: "Physics Olympiad resources",
 };
 
 export default function RootLayout({
@@ -16,8 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="mn" suppressHydrationWarning>
+    <html lang="mn">
       <body className={inter.className}>
+        {/* LanguageProvider заавал children-ийг бүхэлд нь бүрхэх ёстой */}
         <LanguageProvider>
           {children}
         </LanguageProvider>
