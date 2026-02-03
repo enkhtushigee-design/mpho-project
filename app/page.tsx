@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/LanguageContext";
-import { Globe, ArrowRight, BookOpen, Newspaper } from "lucide-react";
+import { Globe, BookOpen, Newspaper } from "lucide-react";
 
 export default function Home() {
   const { t, lang, setLang } = useLanguage();
 
   return (
     <main className="min-h-screen bg-white font-sans">
-      {/* Navbar */}
       <nav className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center border-b border-slate-50">
         <h1 className="text-xl font-black italic tracking-tighter">PHYSICS.MN</h1>
         <div className="flex items-center gap-6">
@@ -17,7 +16,7 @@ export default function Home() {
           <Link href="/archive" className="text-xs font-bold hover:text-blue-600 transition uppercase">{t('nav.archive')}</Link>
           <button 
             onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black tracking-widest hover:bg-blue-600 transition-all active:scale-95 shadow-lg"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black tracking-widest hover:bg-blue-600 transition-all active:scale-95"
           >
             <Globe size={14} />
             {lang === 'mn' ? 'ENGLISH' : 'МОНГОЛ'}
@@ -25,11 +24,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-6 py-32 text-center">
-        <div className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-8">
-          Welcome to Physics Mongolia
-        </div>
         <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 uppercase italic leading-[0.9]">
           {t('home.hero_title')}
         </h2>
