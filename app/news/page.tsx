@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useLanguage } from "@/lib/LanguageContext";
-import { ArrowLeft, Globe, Calendar, ArrowRight } from "lucide-react";
+import { ArrowLeft, Globe, Calendar, ArrowRight, Zap } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,61 +17,53 @@ export default function NewsPage() {
 
   useEffect(() => {
     async function fetchNews() {
-      const { data } = await supabase
-        .from('news')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const { data } = await supabase.from('news').select('*').order('created_at', { ascending: false });
       if (data) setNewsList(data);
     }
     fetchNews();
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-50 pb-20">
-      <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
-              <ArrowLeft size={20} />
-            </Link>
-            <h1 className="text-xl font-black tracking-tighter uppercase italic">{t('news.title')}</h1>
-          </div>
-          <button 
-            onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black"
-          >
-            <Globe size={14} />
-            {lang === 'mn' ? 'ENGLISH' : 'МОНГОЛ'}
-          </button>
+    <main className="min-h-screen bg-white">
+      <nav className="px-8 py-8 flex items-center justify-between sticky top-0 bg-white/80 backdrop-blur-xl z-50">
+        <div className="flex items-center gap-6">
+          <Link href="/" className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-900 hover:text-white transition">
+            <ArrowLeft size={18} />
+          </Link>
+          <h1 className="text-2xl font-[1000] italic tracking-tighter uppercase">{t('news.title')}</h1>
         </div>
+        <button 
+          onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
+          className="px-4 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black tracking-widest"
+        >
+          {lang === 'mn' ? 'ENGLISH' : 'МОНГОЛ'}
+        </button>
       </nav>
 
-      <div className="max-w-6xl mx-auto px-6 pt-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {newsList.map((news) => (
-            <Link key={news.id} href={`/news/${news.id}`} className="group">
-              <div className="bg-white rounded-[40px] overflow-hidden border border-slate-100 hover:shadow-2xl transition-all duration-500">
-                <div className="aspect-video relative overflow-hidden bg-slate-200">
-                  {news.image_url && (
-                    <img src={news.image_url} alt="" className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
-                  )}
+      <div className="max-w-[1400px] mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 pb-32">
+        {newsList.map((news) => (
+          <Link key={news.id} href={`/news/${news.id}`} className="group">
+            <div className="bg-slate-50 rounded-[56px] p-4 h-full border border-transparent hover:border-slate-200 transition-all duration-500 hover:bg-white hover:shadow-2xl">
+              <div className="aspect-[16/10] rounded-[42px] overflow-hidden bg-slate-200 mb-8">
+                {news.image_url && (
+                  <img src={news.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+                )}
+              </div>
+              <div className="px-8 pb-8">
+                <div className="flex items-center gap-3 text-slate-400 mb-6 font-black text-[10px] tracking-widest uppercase">
+                  <Zap size={14} className="text-blue-600" />
+                  {new Date(news.created_at).toLocaleDateString()}
                 </div>
-                <div className="p-10">
-                  <div className="flex items-center gap-3 text-slate-400 mb-6 font-bold text-[10px] uppercase tracking-widest">
-                    <Calendar size={14} />
-                    {new Date(news.created_at).toLocaleDateString()}
-                  </div>
-                  <h2 className="text-3xl font-black mb-6 leading-tight group-hover:text-blue-600 transition">
-                    {lang === 'mn' ? news.title : (news.title_en || news.title)}
-                  </h2>
-                  <div className="flex items-center gap-2 text-blue-600 font-black text-xs uppercase tracking-widest">
-                    {t('news.read_more')} <ArrowRight size={16} />
-                  </div>
+                <h2 className="text-4xl font-[900] italic tracking-tighter leading-[0.9] uppercase mb-8 group-hover:text-blue-600 transition">
+                  {lang === 'mn' ? news.title : (news.title_en || news.title)}
+                </h2>
+                <div className="flex items-center gap-2 font-black text-[10px] tracking-widest uppercase text-slate-900 group-hover:gap-4 transition-all">
+                  {t('news.read_more')} <ArrowRight size={14} />
                 </div>
               </div>
-            </Link>
-          ))}
-        </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </main>
   );
