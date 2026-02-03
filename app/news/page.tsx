@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
-import { Calendar, ChevronRight, Loader2, Newspaper } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
+import { ArrowLeft, Globe, Calendar, ArrowRight } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,8 +12,8 @@ const supabase = createClient(
 );
 
 export default function NewsPage() {
-  const [news, setNews] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [newsList, setNewsList] = useState<any[]>([]);
+  const { t, lang, setLang } = useLanguage();
 
   useEffect(() => {
     async function fetchNews() {
@@ -20,65 +21,56 @@ export default function NewsPage() {
         .from('news')
         .select('*')
         .order('created_at', { ascending: false });
-      if (data) setNews(data);
-      setLoading(false);
+      if (data) setNewsList(data);
     }
     fetchNews();
   }, []);
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Loader2 className="animate-spin text-blue-600" size={40} />
-    </div>
-  );
-
   return (
     <main className="min-h-screen bg-slate-50 pb-20">
-      {/* Header */}
-      <div className="bg-white border-b border-slate-100 py-16 mb-12">
-        <div className="max-w-6xl mx-auto px-6">
-          <h1 className="text-5xl font-black text-slate-900 tracking-tighter italic uppercase mb-4">Мэдээ мэдээлэл</h1>
-          <p className="text-slate-500 font-medium text-lg">Физикийн олимпиадын эргэн тойрон дахь цаг үеийн мэдээллүүд.</p>
+      <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
+              <ArrowLeft size={20} />
+            </Link>
+            <h1 className="text-xl font-black tracking-tighter uppercase italic">{t('news.title')}</h1>
+          </div>
+          <button 
+            onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black"
+          >
+            <Globe size={14} />
+            {lang === 'mn' ? 'ENGLISH' : 'МОНГОЛ'}
+          </button>
         </div>
-      </div>
+      </nav>
 
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {news.length > 0 ? news.map((item) => (
-            <Link href={`/news/${item.id}`} key={item.id} className="group bg-white rounded-[32px] overflow-hidden border border-slate-100 hover:border-blue-500 transition-all shadow-sm hover:shadow-2xl hover:shadow-blue-500/10">
-              <div className="aspect-video relative overflow-hidden bg-slate-100">
-                {item.image_url ? (
-                  <img src={item.image_url} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-300"><Newspaper size={40} /></div>
-                )}
-                <div className="absolute top-4 left-4">
-                  <span className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-blue-600 shadow-sm">
-                    {item.category}
-                  </span>
+      <div className="max-w-6xl mx-auto px-6 pt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {newsList.map((news) => (
+            <Link key={news.id} href={`/news/${news.id}`} className="group">
+              <div className="bg-white rounded-[40px] overflow-hidden border border-slate-100 hover:shadow-2xl transition-all duration-500">
+                <div className="aspect-video relative overflow-hidden bg-slate-200">
+                  {news.image_url && (
+                    <img src={news.image_url} alt="" className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
+                  )}
                 </div>
-              </div>
-              <div className="p-8">
-                <div className="flex items-center gap-2 text-slate-400 text-xs font-bold mb-4">
-                  <Calendar size={14} />
-                  {new Date(item.created_at).toLocaleDateString('mn-MN')}
-                </div>
-                <h3 className="text-xl font-black text-slate-900 mb-3 group-hover:text-blue-600 transition-colors leading-tight">
-                  {item.title}
-                </h3>
-                <p className="text-slate-500 text-sm line-clamp-2 font-medium mb-6">
-                  {item.summary}
-                </p>
-                <div className="flex items-center gap-2 text-blue-600 font-black text-xs uppercase tracking-widest">
-                  Дэлгэрэнгүй <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                <div className="p-10">
+                  <div className="flex items-center gap-3 text-slate-400 mb-6 font-bold text-[10px] uppercase tracking-widest">
+                    <Calendar size={14} />
+                    {new Date(news.created_at).toLocaleDateString()}
+                  </div>
+                  <h2 className="text-3xl font-black mb-6 leading-tight group-hover:text-blue-600 transition">
+                    {lang === 'mn' ? news.title : (news.title_en || news.title)}
+                  </h2>
+                  <div className="flex items-center gap-2 text-blue-600 font-black text-xs uppercase tracking-widest">
+                    {t('news.read_more')} <ArrowRight size={16} />
+                  </div>
                 </div>
               </div>
             </Link>
-          )) : (
-            <div className="col-span-full py-20 text-center bg-white rounded-[48px] border-2 border-dashed border-slate-100">
-              <p className="text-slate-400 font-bold uppercase tracking-widest">Одоогоор мэдээ оруулаагүй байна.</p>
-            </div>
-          )}
+          ))}
         </div>
       </div>
     </main>
