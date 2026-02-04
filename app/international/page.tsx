@@ -127,24 +127,26 @@ export default function InternationalPage() {
   const sortedYears = Object.keys(groupedResults).sort((a, b) => Number(b) - Number(a));
 
   const getAwardStyle = (award: string) => {
-    if (award.includes("Silver") || award.includes("Мөнгө")) return "text-slate-500 font-black";
-    if (award.includes("Bronze") || award.includes("Хүрэл")) return "text-orange-600 font-black";
-    return "text-blue-500 font-black";
+    if (award.includes("Silver") || award.includes("Мөнгө")) return "text-slate-600 font-[1000]";
+    if (award.includes("Bronze") || award.includes("Хүрэл")) return "text-orange-700 font-[1000]";
+    return "text-blue-700 font-[1000]";
   };
 
   return (
     <main className="min-h-screen bg-slate-50 font-sans selection:bg-blue-100">
-      <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
+      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-400 hover:text-slate-900">
-              <ArrowLeft size={20} />
+            <Link href="/" className="p-2 hover:bg-slate-50 rounded-full transition text-slate-900">
+              <ArrowLeft size={24} />
             </Link>
-            <h1 className="text-xl font-[1000] italic tracking-tighter uppercase text-slate-900">{t('nav.intl_success')}</h1>
+            <h1 className="text-xl font-[1000] italic tracking-tighter uppercase text-slate-950">
+              {t('nav.intl_success')}
+            </h1>
           </div>
           <button 
             onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
-            className="px-4 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black tracking-widest uppercase hover:bg-blue-600 transition"
+            className="px-5 py-2.5 bg-slate-950 text-white rounded-full text-[10px] font-black tracking-widest uppercase hover:bg-blue-700 transition shadow-lg"
           >
             {lang === 'mn' ? 'ENGLISH' : 'МОНГОЛ'}
           </button>
@@ -152,15 +154,15 @@ export default function InternationalPage() {
       </nav>
 
       <div className="max-w-5xl mx-auto px-6 py-12">
-        <div className="flex flex-wrap gap-2 mb-12 bg-white p-2 rounded-[24px] border border-slate-100 shadow-sm">
+        <div className="flex flex-wrap gap-2 mb-12 bg-white p-3 rounded-[32px] border border-slate-200 shadow-md">
           {TYPES.map((type) => (
             <button
               key={type.id}
               onClick={() => setActiveTab(type.id)}
-              className={`flex-1 min-w-[100px] py-4 rounded-[18px] font-black text-sm transition-all ${
+              className={`flex-1 min-w-[100px] py-4 rounded-[24px] font-[1000] text-sm transition-all ${
                 activeTab === type.id 
-                ? 'bg-slate-900 text-white shadow-lg' 
-                : 'text-slate-400 hover:bg-slate-50 hover:text-slate-600'
+                ? 'bg-slate-950 text-white shadow-xl scale-[1.02]' 
+                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
               {type.name}
@@ -169,10 +171,12 @@ export default function InternationalPage() {
         </div>
 
         <div className="mb-10">
-          <div className="inline-block bg-blue-50 text-blue-600 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
+          <div className="inline-block bg-blue-100 text-blue-800 px-5 py-2 rounded-full text-[10px] font-[1000] uppercase tracking-widest mb-4 border border-blue-200">
             {lang === 'mn' ? TYPES.find(t => t.id === activeTab)?.fullMn : TYPES.find(t => t.id === activeTab)?.fullEn}
           </div>
-          <h2 className="text-4xl font-[1000] italic text-slate-900 tracking-tighter uppercase leading-none">{lang === 'mn' ? 'Монгол улсын амжилт' : 'Mongolian Success'}</h2>
+          <h2 className="text-4xl font-[1000] italic text-slate-950 tracking-tighter uppercase leading-none">
+            {lang === 'mn' ? 'Монгол улсын амжилт' : 'Mongolian Success'}
+          </h2>
         </div>
 
         <div className="space-y-12">
@@ -180,24 +184,31 @@ export default function InternationalPage() {
             const year = Number(yearStr);
             return (
               <div key={year}>
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="text-2xl font-[1000] italic text-slate-900">{year} {lang === 'mn' ? 'он' : 'year'}</div>
-                  <div className="h-[1px] flex-1 bg-slate-200"></div>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="text-2xl font-[1000] italic text-slate-950">{year} {lang === 'mn' ? 'он' : 'year'}</div>
+                  <div className="h-[2px] flex-1 bg-slate-200"></div>
                 </div>
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-1 gap-4">
                   {groupedResults[year].map((res, idx) => (
-                    <div key={idx} className="bg-white p-6 rounded-[32px] border border-slate-100 flex items-center justify-between hover:border-blue-500 transition-all group">
-                      <div className="flex items-center gap-5">
-                        <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center group-hover:bg-blue-50 transition">
-                          <Trophy className="text-slate-300 group-hover:text-blue-500" size={18} />
+                    <div key={idx} className="bg-white p-7 rounded-[32px] border border-slate-200 flex items-center justify-between hover:border-blue-500 hover:shadow-xl transition-all group">
+                      <div className="flex items-center gap-6">
+                        <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center group-hover:bg-blue-50 transition shadow-inner border border-slate-50">
+                          <Trophy className="text-slate-400 group-hover:text-blue-600" size={22} />
                         </div>
-                        <span className="font-bold text-slate-800 text-lg tracking-tight">{res.name}</span>
-                      </div>
-                      <div className="flex items-center gap-8">
-                        <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Rank {res.rank}</span>
-                        <span className={`text-xs uppercase tracking-widest ${getAwardStyle(res.award)}`}>
-                          {lang === 'mn' ? res.award : res.awardEn}
+                        <span className="font-[1000] text-slate-900 text-xl tracking-tight leading-none italic uppercase">
+                          {res.name}
                         </span>
+                      </div>
+                      <div className="flex items-center gap-10">
+                        <div className="flex flex-col items-end">
+                          {/* Rank-ийг маш тод цэнхэр болгов */}
+                          <span className="text-[11px] font-[1000] text-blue-700 uppercase tracking-[0.2em] mb-1">
+                            RANK {res.rank}
+                          </span>
+                          <span className={`text-xs uppercase tracking-widest ${getAwardStyle(res.award)}`}>
+                            {lang === 'mn' ? res.award : res.awardEn}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -205,11 +216,13 @@ export default function InternationalPage() {
               </div>
             );
           }) : (
-            <div className="py-24 text-center bg-white rounded-[40px] border border-dashed border-slate-200">
-              <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Search className="text-slate-200" size={32} />
+            <div className="py-24 text-center bg-white rounded-[40px] border-2 border-dashed border-slate-200 shadow-sm">
+              <div className="bg-slate-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+                <Search className="text-slate-300" size={40} />
               </div>
-              <p className="text-slate-400 font-black uppercase tracking-widest text-sm italic">{lang === 'mn' ? 'Мэдээлэл удахгүй нэмэгдэнэ.' : 'Coming soon.'}</p>
+              <p className="text-slate-950 font-[1000] uppercase tracking-widest text-sm italic">
+                {lang === 'mn' ? 'Мэдээлэл удахгүй нэмэгдэнэ.' : 'Data coming soon.'}
+              </p>
             </div>
           )}
         </div>
