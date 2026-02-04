@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image"; // Логонд ашиглана
+import Image from "next/image";
 import { useLanguage } from "@/lib/LanguageContext";
 import { Globe, BookOpen, Trophy, ArrowRight } from "lucide-react";
 
@@ -9,17 +9,16 @@ export default function Home() {
   const { t, lang, setLang } = useLanguage();
 
   return (
-    // АНХААР: Эндээс bg-white-ийг авч хаясан. Одоо зураг харагдана.
     <main className="min-h-screen relative font-sans selection:bg-blue-100 overflow-x-hidden">
       
-      {/* BACKGROUND IMAGE - Хамгийн энгийн HTML img тааг ашиглав (Найдвартай) */}
-      <div className="fixed top-0 left-0 w-full h-[800px] -z-50">
+      {/* BACKGROUND IMAGE - HTML img ашигласан (Найдвартай харагдана) */}
+      <div className="fixed top-0 left-0 w-full h-[800px] -z-50 pointer-events-none">
         <img 
           src="/hero-bg.jpg" 
           alt="Background" 
           className="w-full h-full object-cover object-top opacity-100"
         />
-        {/* Overlay - Зургийг доошоо цагаан өнгөтэй уусгах */}
+        {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-white/10 to-white" />
       </div>
 
@@ -33,24 +32,28 @@ export default function Home() {
               fill
               className="object-contain"
               priority
-              unoptimized // Лого харагдахгүй бол үүнийг нэмдэг
+              unoptimized
             />
           </div>
-          {/* Текстийг зураг дээр тод харагдуулахын тулд drop-shadow нэмлээ */}
           <h1 className="text-3xl font-[1000] italic tracking-tighter leading-none select-none text-slate-950 uppercase drop-shadow-md bg-white/30 backdrop-blur-sm px-4 py-2 rounded-2xl border border-white/50">
             MPHO<span className="text-blue-600">.</span>MN
           </h1>
         </Link>
         
-        <div className="flex items-center gap-10">
-          <Link href="/news" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
+        <div className="flex items-center gap-6 xl:gap-10">
+          <Link href="/news" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
             {t('nav.news')}
           </Link>
-          <Link href="/archive" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
+          <Link href="/archive" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
             {t('nav.archive')}
           </Link>
-          <Link href="/international" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
+          <Link href="/international" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
             {t('nav.intl_success')}
+          </Link>
+          
+          {/* ЗАССАН ХЭСЭГ: About линкийг бусадтай нь ижил загвартай болгов */}
+          <Link href="/about" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
+            {lang === 'mn' ? 'Бидний тухай' : 'About'}
           </Link>
           
           <button 
@@ -62,7 +65,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* HERO SPACE - Зургийг харуулах зай */}
+      {/* HERO SPACE */}
       <div className="h-[300px]" />
 
       {/* BENTO GRID */}
@@ -91,6 +94,13 @@ export default function Home() {
           </h3>
         </Link>
       </section>
+
+      {/* FOOTER - Дутуу байсныг нэмэв */}
+      <footer className="max-w-[1400px] mx-auto px-8 py-12 text-center border-t border-slate-200/50">
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">
+          © 2026 MPHO.MN - Улсын Физикийн Олимпиадын Хороо
+        </p>
+      </footer>
     </main>
   );
 }
