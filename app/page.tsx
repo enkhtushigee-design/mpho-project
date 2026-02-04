@@ -11,26 +11,33 @@ export default function Home() {
   return (
     <main className="min-h-screen relative font-sans selection:bg-blue-100 overflow-x-hidden bg-white">
       
-      {/* Background Section - Зургийг CSS background-image ашиглаж илүү найдвартай орууллаа */}
-      <div 
-        className="absolute top-0 left-0 w-full h-[700px] -z-20 bg-cover bg-top bg-no-repeat"
-        style={{ backgroundImage: "url('/hero-bg.jpg')" }}
-      >
-        {/* Overlay - Доошоо цагаан өнгөтэй уусгах давхарга */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-white/30 to-white" />
+      {/* Background Image Section */}
+      <div className="absolute top-0 left-0 w-full h-[800px] -z-20">
+        <Image 
+          src="/hero-bg.jpg" 
+          alt="Physics Background"
+          fill
+          priority
+          style={{ 
+            objectFit: 'cover', 
+            objectPosition: 'top' // Зургийн орой хэсгийг харуулна
+          }}
+          className="brightness-90"
+        />
+        {/* Overlay - Зургийг текстээс ялгах ба доошоо цагаан өнгөтэй уусгах */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-white/40 to-white" />
       </div>
 
-      {/* Navbar - Ганц MPHO.MN лого энд үлдсэн */}
+      {/* Navbar - Зургийн дээд хэсгийг таглахгүйн тулд padding-тай */}
       <nav className="max-w-[1400px] mx-auto px-8 py-10 flex justify-between items-center relative z-50">
         <Link href="/" className="flex items-center gap-4 group">
-          <div className="relative w-14 h-14 transition-transform duration-300 group-hover:scale-110 shadow-sm rounded-xl overflow-hidden">
+          <div className="relative w-14 h-14 transition-transform duration-300 group-hover:scale-110 shadow-md rounded-xl overflow-hidden">
             <Image 
               src="/logo.png" 
               alt="MPHO Logo" 
               fill
-              className="object-contain"
+              style={{ objectFit: 'contain' }}
               priority
-              unoptimized // Зураг харагдахгүй байвал энэ тусална
             />
           </div>
           <h1 className="text-3xl font-[1000] italic tracking-tighter leading-none select-none text-slate-950 uppercase">
@@ -58,14 +65,14 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Space - Текстийг устгаж зөвхөн зай үлдээв */}
-      <div className="h-[25vh]" />
+      {/* Hero Space - Зургийн дээд талыг харуулахын тулд хоосон зай гаргав */}
+      <div className="h-[30vh]" />
 
-      {/* Bento Grid - Үндсэн картууд */}
+      {/* Bento Grid */}
       <section className="max-w-[1400px] mx-auto px-8 pb-32 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
         
         {/* ОЛИМПИАДЫН АРХИВ */}
-        <Link href="/archive" className="md:col-span-2 group relative bg-white/90 backdrop-blur-md p-14 rounded-[64px] flex flex-col justify-between min-h-[500px] border border-slate-200 hover:bg-blue-600 transition-all duration-700 shadow-xl">
+        <Link href="/archive" className="md:col-span-2 group relative bg-white/95 backdrop-blur-md p-14 rounded-[64px] flex flex-col justify-between min-h-[500px] border border-slate-200 hover:bg-blue-600 transition-all duration-700 shadow-xl">
           <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
             <BookOpen size={40} className="text-blue-600" />
           </div>
