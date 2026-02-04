@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/image"; // Логонд ашиглана
 import { useLanguage } from "@/lib/LanguageContext";
 import { Globe, BookOpen, Trophy, ArrowRight } from "lucide-react";
 
@@ -9,23 +9,18 @@ export default function Home() {
   const { t, lang, setLang } = useLanguage();
 
   return (
-    <main className="min-h-screen relative font-sans selection:bg-blue-100 overflow-x-hidden bg-white">
+    // АНХААР: Эндээс bg-white-ийг авч хаясан. Одоо зураг харагдана.
+    <main className="min-h-screen relative font-sans selection:bg-blue-100 overflow-x-hidden">
       
-      {/* BACKGROUND IMAGE - Энэ хэсэг зургийг заавал харуулна */}
-      <div 
-        className="absolute top-0 left-0 w-full h-[700px] pointer-events-none"
-        style={{ zIndex: -1 }}
-      >
-        <div 
-          className="relative w-full h-full bg-no-repeat bg-cover"
-          style={{ 
-            backgroundImage: "url('/hero-bg.jpg')", 
-            backgroundPosition: 'top center' 
-          }}
-        >
-          {/* Зөөлөн уусгалт */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-white/20 to-white" />
-        </div>
+      {/* BACKGROUND IMAGE - Хамгийн энгийн HTML img тааг ашиглав (Найдвартай) */}
+      <div className="fixed top-0 left-0 w-full h-[800px] -z-50">
+        <img 
+          src="/hero-bg.jpg" 
+          alt="Background" 
+          className="w-full h-full object-cover object-top opacity-100"
+        />
+        {/* Overlay - Зургийг доошоо цагаан өнгөтэй уусгах */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-white/10 to-white" />
       </div>
 
       {/* NAVBAR */}
@@ -38,21 +33,23 @@ export default function Home() {
               fill
               className="object-contain"
               priority
+              unoptimized // Лого харагдахгүй бол үүнийг нэмдэг
             />
           </div>
-          <h1 className="text-3xl font-[1000] italic tracking-tighter leading-none select-none text-slate-950 uppercase">
+          {/* Текстийг зураг дээр тод харагдуулахын тулд drop-shadow нэмлээ */}
+          <h1 className="text-3xl font-[1000] italic tracking-tighter leading-none select-none text-slate-950 uppercase drop-shadow-md bg-white/30 backdrop-blur-sm px-4 py-2 rounded-2xl border border-white/50">
             MPHO<span className="text-blue-600">.</span>MN
           </h1>
         </Link>
         
         <div className="flex items-center gap-10">
-          <Link href="/news" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors">
+          <Link href="/news" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
             {t('nav.news')}
           </Link>
-          <Link href="/archive" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors">
+          <Link href="/archive" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
             {t('nav.archive')}
           </Link>
-          <Link href="/international" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors">
+          <Link href="/international" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
             {t('nav.intl_success')}
           </Link>
           
@@ -65,13 +62,13 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* HERO SPACE - Зургийн дээд хэсгийг харуулах зай */}
-      <div className="h-[250px] md:h-[350px]" />
+      {/* HERO SPACE - Зургийг харуулах зай */}
+      <div className="h-[300px]" />
 
       {/* BENTO GRID */}
       <section className="max-w-[1400px] mx-auto px-8 pb-32 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
         
-        <Link href="/archive" className="md:col-span-2 group relative bg-white/95 backdrop-blur-md p-14 rounded-[64px] flex flex-col justify-between min-h-[500px] border border-slate-200 hover:bg-blue-600 transition-all duration-700 shadow-xl">
+        <Link href="/archive" className="md:col-span-2 group relative bg-white/80 backdrop-blur-md p-14 rounded-[64px] flex flex-col justify-between min-h-[500px] border border-slate-200 hover:bg-blue-600 transition-all duration-700 shadow-xl">
           <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
             <BookOpen size={40} className="text-blue-600" />
           </div>
