@@ -2,16 +2,19 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Target, Users, Award, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Target, ShieldCheck, Globe } from "lucide-react"; // Globe нэмсэн
 import { useLanguage } from "@/lib/LanguageContext";
 
 export default function AboutPage() {
-  const { t, lang } = useLanguage();
+  const { t, lang, setLang } = useLanguage(); // setLang нэмсэн
 
   return (
     <main className="min-h-screen bg-white font-sans selection:bg-blue-100">
+      
       {/* Navbar */}
       <nav className="max-w-5xl mx-auto px-6 py-10 flex items-center justify-between relative z-50">
+        
+        {/* Left Side: Back Button & Page Title */}
         <div className="flex items-center gap-4">
           <Link href="/" className="p-2 hover:bg-slate-100 rounded-full transition text-slate-900 border border-slate-200">
             <ArrowLeft size={24} />
@@ -20,6 +23,14 @@ export default function AboutPage() {
             {lang === 'mn' ? 'Бидний тухай' : 'About Us'}
           </h1>
         </div>
+
+        {/* Right Side: Language Switcher (Шинээр нэмсэн) */}
+        <button 
+            onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')} 
+            className="px-5 py-2 bg-slate-950 text-white rounded-full text-[10px] font-black tracking-widest flex items-center gap-2 hover:bg-blue-700 transition-all shadow-xl"
+          >
+            <Globe size={12} /> {lang === 'mn' ? 'EN' : 'MN'}
+        </button>
       </nav>
 
       <div className="max-w-5xl mx-auto px-6 pb-24">
@@ -35,14 +46,10 @@ export default function AboutPage() {
               />
             </div>
             <div>
-              <h2 className="text-4xl md:text-5xl font-[1000] italic tracking-tighter uppercase leading-none mb-6">
+              {/* Тайлбар текстийг устгасан тул зөвхөн гарчиг үлдлээ */}
+              <h2 className="text-4xl md:text-5xl font-[1000] italic tracking-tighter uppercase leading-none">
                 {lang === 'mn' ? 'Улсын Физикийн Олимпиадын Хороо' : 'National Physics Olympiad Committee'}
               </h2>
-              <p className="text-slate-400 text-lg leading-relaxed font-medium max-w-2xl">
-                {lang === 'mn' 
-                  ? 'Монгол улсын физикийн боловсролын чанарыг сайжруулах, авьяаслаг сурагчдыг тодруулах, олон улсын түвшинд өрсөлдөх чадварыг нэмэгдүүлэх зорилготой ажиллаж байна.' 
-                  : 'We aim to improve the quality of physics education in Mongolia, identify talented students, and increase their competitiveness at the international level.'}
-              </p>
             </div>
           </div>
           {/* Decorative element */}
@@ -52,37 +59,29 @@ export default function AboutPage() {
         {/* Info Grid (Bento Style) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Зорилго */}
-          <div className="bg-slate-50 border border-slate-200 p-10 rounded-[40px] hover:border-blue-500 transition-all group">
-            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:bg-blue-600 transition-colors">
-              <Target className="text-blue-600 group-hover:text-white" size={32} />
+          <div className="bg-slate-50 border border-slate-200 p-10 rounded-[40px] hover:border-blue-500 transition-all group flex flex-col items-center text-center justify-center min-h-[300px]">
+            <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:bg-blue-600 transition-colors">
+              <Target className="text-blue-600 group-hover:text-white" size={40} />
             </div>
-            <h3 className="text-2xl font-[1000] italic uppercase text-slate-950 mb-4 tracking-tight">
+            <h3 className="text-3xl font-[1000] italic uppercase text-slate-950 tracking-tight">
               {lang === 'mn' ? 'Бидний Зорилго' : 'Our Mission'}
             </h3>
-            <p className="text-slate-700 font-medium leading-relaxed">
-              {lang === 'mn' 
-                ? 'Физикийн шинжлэх ухааныг сурталчлан таниулах, сурагчдын сэтгэн бодох чадварыг хөгжүүлэх замаар ирээдүйн шилдэг инженер, эрдэмтдийг бэлтгэхэд оршино.'
-                : 'To prepare future top engineers and scientists by promoting physics and developing students\' thinking skills.'}
-            </p>
+            {/* Тайлбар текстийг устгасан */}
           </div>
 
           {/* Үйл ажиллагаа */}
-          <div className="bg-slate-50 border border-slate-200 p-10 rounded-[40px] hover:border-blue-500 transition-all group">
-            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:bg-blue-600 transition-colors">
-              <ShieldCheck className="text-blue-600 group-hover:text-white" size={32} />
+          <div className="bg-slate-50 border border-slate-200 p-10 rounded-[40px] hover:border-blue-500 transition-all group flex flex-col items-center text-center justify-center min-h-[300px]">
+            <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:bg-blue-600 transition-colors">
+              <ShieldCheck className="text-blue-600 group-hover:text-white" size={40} />
             </div>
-            <h3 className="text-2xl font-[1000] italic uppercase text-slate-950 mb-4 tracking-tight">
+            <h3 className="text-3xl font-[1000] italic uppercase text-slate-950 tracking-tight">
               {lang === 'mn' ? 'Үйл ажиллагаа' : 'Activities'}
             </h3>
-            <p className="text-slate-700 font-medium leading-relaxed">
-              {lang === 'mn' 
-                ? 'Улсын физикийн олимпиадыг зохион байгуулах, олон улсын олимпиадад оролцох баг тамирчдыг сонгон шалгаруулж, бэлтгэл хангах үндсэн үүргийг гүйцэтгэдэг.'
-                : 'Organizing the National Physics Olympiad, selecting and preparing the national team for international olympiads.'}
-            </p>
+            {/* Тайлбар текстийг устгасан */}
           </div>
         </div>
 
-        {/* Simple Footer Text */}
+        {/* Footer Text */}
         <div className="mt-20 text-center border-t border-slate-100 pt-12">
           <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px]">
             © 2026 Улсын Физикийн Олимпиадын Хороо. All rights reserved.
