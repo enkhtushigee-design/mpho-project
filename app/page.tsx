@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { ArrowRight, Trophy, BookOpen, Newspaper, Globe } from "lucide-react";
-import { useLanguage } from "@/lib/LanguageContext";
-import BackgroundSlider from "@/components/BackgroundSlider";
+import { useLanguage } from "../lib/LanguageContext";
+import BackgroundSlider from "../components/BackgroundSlider";
 
 export default function Home() {
   const { t, lang, setLang } = useLanguage();
@@ -11,14 +11,11 @@ export default function Home() {
   return (
     <main className="min-h-screen relative font-sans text-white selection:bg-blue-500 selection:text-white">
       
-      {/* Арын фон зураг эргэлддэг хэсэг */}
       <BackgroundSlider />
 
-      {/* Navbar Section */}
       <nav className="border-b border-white/10 sticky top-0 z-50 backdrop-blur-md bg-black/10">
         <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* Логоны оронд текст эсвэл зураг байж болно */}
             <h1 className="text-xl md:text-2xl font-[1000] tracking-tighter uppercase italic text-white shadow-sm">
               Physics Olympiad
             </h1>
@@ -34,26 +31,20 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Content Section */}
       <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center relative z-20">
-        
-        {/* Badge */}
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600/30 border border-blue-400/30 text-blue-200 text-[10px] md:text-xs font-black uppercase tracking-widest mb-8 backdrop-blur-md">
           <Trophy size={14} className="text-yellow-400" />
           <span>{t('home.foundation_year')}</span>
         </div>
         
-        {/* Main Title */}
         <h1 className="animate-in fade-in slide-in-from-bottom-8 duration-1000 text-5xl md:text-7xl lg:text-8xl font-[1000] tracking-tighter uppercase italic mb-8 drop-shadow-2xl leading-[0.9]">
           {t('home.hero_title')}
         </h1>
         
-        {/* Subtitle */}
         <p className="animate-in fade-in slide-in-from-bottom-12 duration-1000 text-lg md:text-xl text-slate-200 max-w-2xl mx-auto mb-12 font-medium leading-relaxed drop-shadow-md">
           {t('home.hero_subtitle')}
         </p>
 
-        {/* Action Buttons */}
         <div className="animate-in fade-in slide-in-from-bottom-16 duration-1000 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
           <Link 
             href="/archive" 
@@ -74,7 +65,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Footer / Copyright */}
       <div className="absolute bottom-6 left-0 right-0 text-center z-20">
         <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] opacity-80 hover:opacity-100 transition-opacity">
           © 2026 {t('home.physics_committee')}
