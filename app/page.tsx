@@ -1,106 +1,85 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { ArrowRight, Trophy, BookOpen, Newspaper, Globe } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
-import { Globe, BookOpen, Trophy, ArrowRight } from "lucide-react";
+import BackgroundSlider from "@/components/BackgroundSlider";
 
 export default function Home() {
   const { t, lang, setLang } = useLanguage();
 
   return (
-    <main className="min-h-screen relative font-sans selection:bg-blue-100 overflow-x-hidden">
+    <main className="min-h-screen relative font-sans text-white selection:bg-blue-500 selection:text-white">
       
-      {/* BACKGROUND IMAGE - HTML img ашигласан (Найдвартай харагдана) */}
-      <div className="fixed top-0 left-0 w-full h-[800px] -z-50 pointer-events-none">
-        <img 
-          src="/hero-bg.jpg" 
-          alt="Background" 
-          className="w-full h-full object-cover object-top opacity-100"
-        />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-white/10 to-white" />
-      </div>
+      {/* Арын фон зураг эргэлддэг хэсэг */}
+      <BackgroundSlider />
 
-      {/* NAVBAR */}
-      <nav className="max-w-[1400px] mx-auto px-8 py-10 flex justify-between items-center relative z-50">
-        <Link href="/" className="flex items-center gap-4 group">
-          <div className="relative w-16 h-16 transition-transform duration-300 group-hover:scale-110">
-            <Image 
-              src="/logo.png" 
-              alt="MPHO Logo" 
-              fill
-              className="object-contain"
-              priority
-              unoptimized
-            />
+      {/* Navbar Section */}
+      <nav className="border-b border-white/10 sticky top-0 z-50 backdrop-blur-md bg-black/10">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {/* Логоны оронд текст эсвэл зураг байж болно */}
+            <h1 className="text-xl md:text-2xl font-[1000] tracking-tighter uppercase italic text-white shadow-sm">
+              Physics Olympiad
+            </h1>
           </div>
-          <h1 className="text-3xl font-[1000] italic tracking-tighter leading-none select-none text-slate-950 uppercase drop-shadow-md bg-white/30 backdrop-blur-sm px-4 py-2 rounded-2xl border border-white/50">
-            MPHO<span className="text-blue-600">.</span>MN
-          </h1>
-        </Link>
-        
-        <div className="flex items-center gap-6 xl:gap-10">
-          <Link href="/news" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
-            {t('nav.news')}
-          </Link>
-          <Link href="/archive" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
-            {t('nav.archive')}
-          </Link>
-          <Link href="/international" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
-            {t('nav.intl_success')}
-          </Link>
-          
-          {/* ЗАССАН ХЭСЭГ: About линкийг бусадтай нь ижил загвартай болгов */}
-          <Link href="/about" className="text-[11px] font-[1000] uppercase tracking-[0.2em] text-slate-950 hover:text-blue-700 transition-colors drop-shadow-sm bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
-            {lang === 'mn' ? 'Бидний тухай' : 'About'}
-          </Link>
           
           <button 
-            onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')} 
-            className="px-6 py-3 bg-slate-950 text-white rounded-full text-[10px] font-black tracking-widest flex items-center gap-2 hover:bg-blue-700 transition-all shadow-2xl"
+            onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
+            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-[10px] font-black tracking-widest transition-all backdrop-blur-md border border-white/10 active:scale-95"
           >
-            <Globe size={14} /> {lang === 'mn' ? 'EN' : 'MN'}
+            <Globe size={12} />
+            {lang === 'mn' ? 'ENGLISH' : 'МОНГОЛ'}
           </button>
         </div>
       </nav>
 
-      {/* HERO SPACE */}
-      <div className="h-[300px]" />
-
-      {/* BENTO GRID */}
-      <section className="max-w-[1400px] mx-auto px-8 pb-32 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+      {/* Hero Content Section */}
+      <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center relative z-20">
         
-        <Link href="/archive" className="md:col-span-2 group relative bg-white/80 backdrop-blur-md p-14 rounded-[64px] flex flex-col justify-between min-h-[500px] border border-slate-200 hover:bg-blue-600 transition-all duration-700 shadow-xl">
-          <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-            <BookOpen size={40} className="text-blue-600" />
-          </div>
-          <div className="flex justify-between items-end">
-            <h3 className="text-7xl font-[1000] italic tracking-tighter uppercase leading-none text-slate-950 group-hover:text-white transition-colors">
-              {t('nav.archive')}
-            </h3>
-            <div className="bg-slate-950 text-white p-5 rounded-full group-hover:bg-white group-hover:text-blue-600 transition-all">
-              <ArrowRight size={32} />
-            </div>
-          </div>
-        </Link>
-
-        <Link href="/international" className="group relative bg-slate-950 p-14 rounded-[64px] flex flex-col justify-between min-h-[500px] border border-slate-800 hover:bg-white transition-all duration-700 shadow-2xl">
-          <div className="w-20 h-20 bg-slate-800 rounded-3xl flex items-center justify-center group-hover:bg-blue-50 transition-colors shadow-lg">
-            <Trophy size={40} className="text-blue-400 group-hover:text-blue-600" />
-          </div>
-          <h3 className="text-5xl font-[1000] italic tracking-tighter uppercase leading-none text-white group-hover:text-slate-950 transition-colors">
-            {t('nav.intl_success')}
-          </h3>
-        </Link>
-      </section>
-
-      {/* FOOTER - Дутуу байсныг нэмэв */}
-      <footer className="max-w-[1400px] mx-auto px-8 py-12 text-center border-t border-slate-200/50">
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">
-          © 2026 MPHO.MN - Улсын Физикийн Олимпиадын Хороо
+        {/* Badge */}
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600/30 border border-blue-400/30 text-blue-200 text-[10px] md:text-xs font-black uppercase tracking-widest mb-8 backdrop-blur-md">
+          <Trophy size={14} className="text-yellow-400" />
+          <span>{t('home.foundation_year')}</span>
+        </div>
+        
+        {/* Main Title */}
+        <h1 className="animate-in fade-in slide-in-from-bottom-8 duration-1000 text-5xl md:text-7xl lg:text-8xl font-[1000] tracking-tighter uppercase italic mb-8 drop-shadow-2xl leading-[0.9]">
+          {t('home.hero_title')}
+        </h1>
+        
+        {/* Subtitle */}
+        <p className="animate-in fade-in slide-in-from-bottom-12 duration-1000 text-lg md:text-xl text-slate-200 max-w-2xl mx-auto mb-12 font-medium leading-relaxed drop-shadow-md">
+          {t('home.hero_subtitle')}
         </p>
-      </footer>
+
+        {/* Action Buttons */}
+        <div className="animate-in fade-in slide-in-from-bottom-16 duration-1000 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+          <Link 
+            href="/archive" 
+            className="group w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg shadow-blue-900/50 border border-blue-500"
+          >
+            <BookOpen size={20} />
+            <span>{t('nav.archive')}</span>
+          </Link>
+          
+          <Link 
+            href="/news" 
+            className="group w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-2xl font-bold transition-all backdrop-blur-md flex items-center justify-center gap-2 hover:border-white/40"
+          >
+            <Newspaper size={20} />
+            <span>{t('home.browse_updates')}</span>
+            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Footer / Copyright */}
+      <div className="absolute bottom-6 left-0 right-0 text-center z-20">
+        <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] opacity-80 hover:opacity-100 transition-opacity">
+          © 2026 {t('home.physics_committee')}
+        </p>
+      </div>
     </main>
   );
 }
