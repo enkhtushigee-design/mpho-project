@@ -1,7 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { translations } from './translations';
+// АНХААР: Файлын нэр translation.ts тул s-гүй бичнэ
+import { translations } from './translation'; 
 
 type Language = 'mn' | 'en';
 
@@ -18,7 +19,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Хөтөч дээр хадгалагдсан хэл байгаа эсэхийг шалгах
     const savedLang = localStorage.getItem('lang') as Language;
     if (savedLang && (savedLang === 'mn' || savedLang === 'en')) {
       setLangState(savedLang);
@@ -39,13 +39,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       if (result && result[key]) {
         result = result[key];
       } else {
-        return path; // Хэрэв текст олдохгүй бол замыг нь буцаана
+        return path;
       }
     }
     return result;
   };
 
-  // Hydration error болон Build error-оос сэргийлэх хэсэг
   if (!mounted) {
     return <>{children}</>;
   }
@@ -59,9 +58,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  
-  // Vercel Build хийх үед Provider-оос гадна хандах тохиолдолд 
-  // вэб сайтыг алдаа зааж зогсоохоос сэргийлсэн "Safety Net"
   if (context === undefined) {
     return {
       lang: 'mn' as Language,
@@ -69,6 +65,5 @@ export function useLanguage() {
       t: (path: string) => path
     };
   }
-  
   return context;
 }
