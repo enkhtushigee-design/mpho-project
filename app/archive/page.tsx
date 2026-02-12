@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase"; // ЗАССАН: createClient дахин хийхгүй, бэлэн client ашиглана
+import { supabase } from "@/lib/supabase"; 
 import { useLanguage } from "@/lib/LanguageContext"; 
 import { 
   ArrowLeft, FileText, CheckCircle, Trophy, 
@@ -54,7 +54,6 @@ export default function ArchivePage() {
     async function getArchive() {
       if (selectedYear && selectedType && selectedCategory) {
         setLoading(true);
-        // " он" гэдэг текстийг хасаж хайлт хийх (Database дээр ямар байгаагаас шалтгаална)
         const yearQuery = selectedYear.replace(" он", "").replace(" year", ""); 
 
         const { data } = await supabase
@@ -97,7 +96,7 @@ export default function ArchivePage() {
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 pt-12">
-        {/* Filter Section - Bento Style */}
+        {/* Filter Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           
           {/* Year Filter */}
@@ -226,4 +225,13 @@ function FileCard({ title, icon, url, color, t }: any) {
       rel="noopener noreferrer" 
       className={`group bg-white p-10 rounded-[40px] border border-slate-200 hover:border-transparent transition-all duration-500 hover:shadow-2xl relative overflow-hidden ${!url && 'opacity-40 grayscale pointer-events-none'}`}
     >
-      <div className={`w-20 h-20 rounded-[24px] flex items-center justify-center mb-8 transition-all duration-
+      <div className={`w-20 h-20 rounded-[24px] flex items-center justify-center mb-8 transition-all duration-500 ${styles[color]} group-hover:text-white shadow-sm`}>
+        {icon}
+      </div>
+      <h4 className="text-3xl font-[1000] italic uppercase text-slate-950 mb-3 tracking-tighter">{title}</h4>
+      <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2 group-hover:text-blue-600 transition-colors">
+        {t('archive_page.view_pdf')} <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
+      </p>
+    </a>
+  );
+}
