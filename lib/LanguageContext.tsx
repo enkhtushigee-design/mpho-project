@@ -1,52 +1,51 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-// ЗАССАН: Файлын нэр "translation" (ганц тоогоор) байгаа тул s-гүй бичнэ
-import { translations } from './translation'; 
+// АНХААР: Таны lib фолдер доторх орчуулгын файл "translations.ts" (s-тэй) нэртэй байх ёстой.
+import { translations } from './translations'; 
 
 type Language = 'mn' | 'en';
 
-interface LanguageContextType {
+type LanguageContextType = {
   lang: Language;
   setLang: (lang: Language) => void;
-  t: (path: string) => any;
-}
+  t: (key: string) => string;
+};
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Language>('mn');
+  const [lang, setLang] = useState<Language>('mn');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Хөтөч дээр хадгалагдсан хэл байгаа эсэхийг шалгах
-    const savedLang = localStorage.getItem('lang') as Language;
-    if (savedLang && (savedLang === 'mn' || savedLang === 'en')) {
-      setLangState(savedLang);
-    }
     setMounted(true);
+    const savedLang = localStorage.getItem('language') as Language;
+    if (savedLang) {
+      setLang(savedLang);
+    }
   }, []);
 
-  const setLang = (newLang: Language) => {
-    setLangState(newLang);
-    localStorage.setItem('lang', newLang);
-  };
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('language', lang);
+    }
+  }, [lang, mounted]);
 
-  const t = (path: string) => {
-    const keys = path.split('.');
-    let result: any = translations[lang];
+  const t = (key: string) => {
+    const keys = key.split('.');
+    let value: any = translations[lang];
     
-    for (const key of keys) {
-      if (result && result[key]) {
-        result = result[key];
+    for (const k of keys) {
+      if (value && value[k]) {
+        value = value[k];
       } else {
-        return path; // Хэрэв текст олдохгүй бол замыг нь буцаана
+        return key; 
       }
     }
-    return result;
+    return value;
   };
 
-  // Hydration error болон Build error-оос сэргийлэх хэсэг
   if (!mounted) {
     return <>{children}</>;
   }
@@ -60,16 +59,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  
-  // Vercel Build хийх үед Provider-оос гадна хандах тохиолдолд 
-  // вэб сайтыг алдаа зааж зогсоохоос сэргийлсэн "Safety Net"
   if (context === undefined) {
-    return {
-      lang: 'mn' as Language,
-      setLang: () => {},
-      t: (path: string) => path
-    };
+    throw new Error('useLanguage must be used within a LanguageProvider');
   }
-  
   return context;
 }
