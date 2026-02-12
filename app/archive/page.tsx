@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase"; // Өөрчилсөн: lib-ээс дуудах
+import { supabase } from "@/lib/supabase"; // ЗАССАН: createClient дахин хийхгүй, бэлэн client ашиглана
 import { useLanguage } from "@/lib/LanguageContext"; 
 import { 
   ArrowLeft, FileText, CheckCircle, Trophy, 
@@ -28,7 +28,6 @@ export default function ArchivePage() {
   const [resultData, setResultData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  // Анхны өгөгдөл татах
   useEffect(() => {
     async function fetchData() {
       const { data: tData } = await supabase.from('olympic_types').select('*').order('name');
@@ -39,7 +38,6 @@ export default function ArchivePage() {
     fetchData();
   }, []);
 
-  // Категори шүүлтүүр
   useEffect(() => {
     const selectedTypeName = types.find(t => t.id === selectedType)?.name;
     if (selectedTypeName === "Улс") {
@@ -52,15 +50,12 @@ export default function ArchivePage() {
     }
   }, [selectedType, allCategories, types]);
 
-  // Архивын өгөгдөл хайх
   useEffect(() => {
     async function getArchive() {
       if (selectedYear && selectedType && selectedCategory) {
         setLoading(true);
         // " он" гэдэг текстийг хасаж хайлт хийх (Database дээр ямар байгаагаас шалтгаална)
-        // Хэрэв DB дээр "2023-2024 он" гэж байгаа бол yearQuery = selectedYear байна.
-        // Хэрэв DB дээр "2023-2024" гэж байгаа бол " он"-ийг хасна.
-        const yearQuery = selectedYear.replace(" он", ""); 
+        const yearQuery = selectedYear.replace(" он", "").replace(" year", ""); 
 
         const { data } = await supabase
           .from('archive')
@@ -231,13 +226,4 @@ function FileCard({ title, icon, url, color, t }: any) {
       rel="noopener noreferrer" 
       className={`group bg-white p-10 rounded-[40px] border border-slate-200 hover:border-transparent transition-all duration-500 hover:shadow-2xl relative overflow-hidden ${!url && 'opacity-40 grayscale pointer-events-none'}`}
     >
-      <div className={`w-20 h-20 rounded-[24px] flex items-center justify-center mb-8 transition-all duration-500 ${styles[color]} group-hover:text-white shadow-sm`}>
-        {icon}
-      </div>
-      <h4 className="text-3xl font-[1000] italic uppercase text-slate-950 mb-3 tracking-tighter">{title}</h4>
-      <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2 group-hover:text-blue-600 transition-colors">
-        {t('archive_page.view_pdf')} <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
-      </p>
-    </a>
-  );
-}
+      <div className={`w-20 h-20 rounded-[24px] flex items-center justify-center mb-8 transition-all duration-
