@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { LanguageProvider } from "@/lib/LanguageContext";
+import { LanguageProvider } from "../lib/LanguageContext"; // Зөвхөн @-г устгаж ../ болголоо
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
