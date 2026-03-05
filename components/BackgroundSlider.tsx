@@ -3,18 +3,17 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
+// Зөвхөн 2 зурагтай болгож өөрчиллөө
 const images = [
   "/backgrounds/bg1.jpg",
-  "/backgrounds/bg2.jpg",
-  "/backgrounds/bg3.jpg",
-  "/backgrounds/bg4.jpg",
-  "/backgrounds/bg5.jpg"
+  "/backgrounds/bg2.jpg"
 ];
 
 export default function BackgroundSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    // 5 секунд тутамд солигдоно
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 5000); 
@@ -23,8 +22,9 @@ export default function BackgroundSlider() {
   }, []);
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden bg-slate-900">
-      <div className="absolute inset-0 bg-black/50 z-10" />
+    <div className="fixed inset-0 -z-10 overflow-hidden bg-slate-950">
+      <div className="absolute inset-0 bg-black/60 z-10" />
+      
       {images.map((src, index) => (
         <div
           key={src}
@@ -38,7 +38,7 @@ export default function BackgroundSlider() {
             fill
             className="object-cover"
             priority={index === 0}
-            quality={85}
+            quality={90}
           />
         </div>
       ))}
