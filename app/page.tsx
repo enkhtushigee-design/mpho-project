@@ -12,7 +12,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <main className="min-h-screen relative isolate font-sans text-white selection:bg-blue-500 selection:text-white">
+    <main className="min-h-screen relative isolate overflow-hidden font-sans text-white selection:bg-blue-500 selection:text-white">
       
       <BackgroundSlider />
 
@@ -28,7 +28,6 @@ export default function Home() {
             </span>
           </Link>
 
-          {/* Desktop links */}
           <div className="hidden md:flex items-center gap-1">
             <Link href="/archive" className="px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {t('nav.archive')}
@@ -50,7 +49,6 @@ export default function Home() {
               {lang === 'mn' ? 'EN' : 'MN'}
             </button>
 
-            {/* Mobile hamburger */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 bg-white/10 hover:bg-white/20 rounded-full border border-white/10 transition-all"
@@ -60,7 +58,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-white/10 bg-black/40 backdrop-blur-md px-6 py-4 flex flex-col gap-2">
             <Link href="/archive" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
