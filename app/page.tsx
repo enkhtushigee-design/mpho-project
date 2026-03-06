@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Trophy, BookOpen, Newspaper, Globe } from "lucide-react";
 import { useLanguage } from "../lib/LanguageContext";
 import BackgroundSlider from "../components/BackgroundSlider";
@@ -14,13 +15,35 @@ export default function Home() {
       <BackgroundSlider />
 
       <nav className="border-b border-white/10 sticky top-0 z-50 backdrop-blur-md bg-black/10">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
-          <h1 className="text-xl md:text-2xl font-[1000] tracking-tighter uppercase italic text-white shadow-sm">
-            Physics Olympiad
-          </h1>
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-8">
+          
+          {/* Зүүн: Лого + Нэр */}
+          <Link href="/" className="flex items-center gap-3 shrink-0">
+            <div className="relative w-9 h-9">
+              <Image src="/logo.png" alt="MPHO Logo" fill className="object-contain" />
+            </div>
+            <span className="text-lg md:text-xl font-[1000] tracking-tighter uppercase italic text-white">
+              MPHO.MN
+            </span>
+          </Link>
+
+          {/* Дунд: Navigation links */}
+          <div className="hidden md:flex items-center gap-1">
+            <Link href="/archive" className="px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
+              {t('nav.archive')}
+            </Link>
+            <Link href="/international" className="px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
+              {t('nav.intl_success')}
+            </Link>
+            <Link href="/about" className="px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
+              {lang === 'mn' ? 'БИДНИЙ ТУХАЙ' : 'ABOUT'}
+            </Link>
+          </div>
+
+          {/* Баруун: Хэл солих */}
           <button 
             onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
-            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-[10px] font-black tracking-widest transition-all backdrop-blur-md border border-white/10 active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-[10px] font-black tracking-widest transition-all backdrop-blur-md border border-white/10 active:scale-95 shrink-0"
           >
             <Globe size={12} />
             {lang === 'mn' ? 'ENGLISH' : 'МОНГОЛ'}
