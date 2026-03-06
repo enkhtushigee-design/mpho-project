@@ -3,20 +3,18 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-// Зөвхөн 2 зурагтай болгож өөрчиллөө
 const images = [
-  "/backgrounds/bg1.jpg",
-  "/backgrounds/bg2.jpg"
+  "/bg1.jpg",
+  "/bg2.jpg"
 ];
 
 export default function BackgroundSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    // 5 секунд тутамд солигдоно
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); 
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
