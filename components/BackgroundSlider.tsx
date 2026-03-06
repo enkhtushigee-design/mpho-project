@@ -15,12 +15,11 @@ export default function BackgroundSlider() {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 5000);
-
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden bg-slate-950">
+    <div className="absolute inset-0 overflow-hidden bg-slate-950">
       <div className="absolute inset-0 bg-black/60 z-10" />
       {images.map((src, index) => (
         <div

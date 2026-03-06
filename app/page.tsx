@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Trophy, BookOpen, Newspaper, Globe } from "lucide-react";
+import { ArrowRight, BookOpen, Newspaper, Globe } from "lucide-react";
 import { useLanguage } from "../lib/LanguageContext";
 import BackgroundSlider from "../components/BackgroundSlider";
 
@@ -17,7 +17,6 @@ export default function Home() {
       <nav className="border-b border-white/10 sticky top-0 z-50 backdrop-blur-md bg-black/10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-8">
           
-          {/* Зүүн: Лого + Нэр */}
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <div className="relative w-9 h-9">
               <Image src="/logo.png" alt="MPHO Logo" fill className="object-contain" />
@@ -27,7 +26,6 @@ export default function Home() {
             </span>
           </Link>
 
-          {/* Дунд: Navigation links */}
           <div className="hidden md:flex items-center gap-1">
             <Link href="/archive" className="px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {t('nav.archive')}
@@ -40,7 +38,6 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Баруун: Хэл солих */}
           <button 
             onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
             className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-[10px] font-black tracking-widest transition-all backdrop-blur-md border border-white/10 active:scale-95 shrink-0"
@@ -52,19 +49,6 @@ export default function Home() {
       </nav>
 
       <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center relative z-20">
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600/30 border border-blue-400/30 text-blue-200 text-[10px] md:text-xs font-black uppercase tracking-widest mb-8 backdrop-blur-md">
-          <Trophy size={14} className="text-yellow-400" />
-          <span>{t('home.foundation_year')}</span>
-        </div>
-        
-        <h1 className="animate-in fade-in slide-in-from-bottom-8 duration-1000 text-5xl md:text-7xl lg:text-8xl font-[1000] tracking-tighter uppercase italic mb-8 drop-shadow-2xl leading-[0.9]">
-          {t('home.hero_title')}
-        </h1>
-        
-        <p className="animate-in fade-in slide-in-from-bottom-12 duration-1000 text-lg md:text-xl text-slate-200 max-w-2xl mx-auto mb-12 font-medium leading-relaxed drop-shadow-md">
-          {t('home.hero_subtitle')}
-        </p>
-
         <div className="animate-in fade-in slide-in-from-bottom-16 duration-1000 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
           <Link 
             href="/archive" 
