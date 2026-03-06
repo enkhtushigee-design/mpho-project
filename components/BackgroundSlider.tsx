@@ -33,7 +33,7 @@ export default function BackgroundSlider() {
             alt={`Background slide ${index + 1}`}
             fill
             className="object-cover"
-            style={{ objectPosition: "center 40%" }}
+            style={{ objectPosition: "center 70%" }}
             priority={index === 0}
             quality={90}
           />
