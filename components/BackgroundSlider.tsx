@@ -19,7 +19,7 @@ export default function BackgroundSlider() {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-slate-950">
+    <div className="fixed inset-0 -z-10 overflow-hidden bg-slate-950">
       <div className="absolute inset-0 bg-black/60 z-10" />
       {images.map((src, index) => (
         <div
@@ -32,7 +32,7 @@ export default function BackgroundSlider() {
             src={src}
             alt={`Background slide ${index + 1}`}
             fill
-            className="object-cover"
+            className="object-cover object-top"
             priority={index === 0}
             quality={90}
           />

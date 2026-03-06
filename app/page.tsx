@@ -10,11 +10,11 @@ export default function Home() {
   const { t, lang, setLang } = useLanguage();
 
   return (
-    <main className="min-h-screen relative font-sans text-white selection:bg-blue-500 selection:text-white">
+    <main className="min-h-screen relative isolate font-sans text-white selection:bg-blue-500 selection:text-white">
       
       <BackgroundSlider />
 
-      <nav className="border-b border-white/10 sticky top-0 z-50 backdrop-blur-md bg-black/10">
+      <nav className="border-b border-white/10 sticky top-0 z-50 backdrop-blur-md bg-black/40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-8">
           
           <Link href="/" className="flex items-center gap-3 shrink-0">
