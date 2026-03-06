@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-// АНХААР: Таны lib фолдер доторх орчуулгын файл "translations.ts" (s-тэй) нэртэй байх ёстой.
 import { translations } from './translations'; 
 
 type Language = 'mn' | 'en';
@@ -35,7 +34,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const t = (key: string) => {
     const keys = key.split('.');
     let value: any = translations[lang];
-    
     for (const k of keys) {
       if (value && value[k]) {
         value = value[k];
@@ -46,10 +44,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return value;
   };
 
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
+  // ✅ ЗАСВАР: үргэлж Provider-оор бүрнэ — mounted үед ч, үгүй үед ч
   return (
     <LanguageContext.Provider value={{ lang, setLang, t }}>
       {children}
