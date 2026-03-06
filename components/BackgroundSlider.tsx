@@ -22,7 +22,6 @@ export default function BackgroundSlider() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden bg-slate-950">
       <div className="absolute inset-0 bg-black/60 z-10" />
-      
       {images.map((src, index) => (
         <div
           key={src}
