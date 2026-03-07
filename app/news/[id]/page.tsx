@@ -1,7 +1,10 @@
-"use client";
+Мэдээний дэлгэрэнгүй хуудас (news/[id]/page.tsx)-д гарчгийн өнгийг засья.
+
+app/news/[id]/page.tsx
+tsx"use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import { useLanguage } from "@/lib/LanguageContext";
 import { ArrowLeft, Calendar, Globe } from "lucide-react";
@@ -25,10 +28,12 @@ export default function NewsDetail() {
     fetchDetail();
   }, [id]);
 
-  if (!news) return null;
+  if (!news) return (
+    <div className="min-h-screen flex items-center justify-center font-black italic text-slate-200 text-4xl uppercase">Loading...</div>
+  );
 
   return (
-    <main className="min-h-screen bg-white pb-20">
+    <main className="min-h-screen bg-white pb-20 font-sans">
       <nav className="border-b border-slate-100 sticky top-0 bg-white/80 backdrop-blur-md z-50">
         <div className="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
           <Link href="/news" className="flex items-center gap-2 text-slate-500 font-bold text-xs hover:text-slate-900 transition">
@@ -44,19 +49,19 @@ export default function NewsDetail() {
         </div>
       </nav>
 
-      <article className="max-w-4xl mx-auto px-6 pt-16">
+      <article className="max-w-4xl mx-auto px-6 pt-16 animate-in fade-in duration-700">
         <div className="flex items-center gap-3 text-slate-400 mb-8 font-bold text-[10px] uppercase tracking-widest">
           <Calendar size={14} />
           {new Date(news.created_at).toLocaleDateString()}
         </div>
         
-        <h1 className="text-5xl md:text-7xl font-black mb-12 tracking-tighter italic uppercase leading-[0.9]">
+        <h1 className="text-4xl md:text-6xl font-black mb-12 tracking-tighter italic uppercase leading-tight text-slate-900">
           {lang === 'mn' ? news.title : (news.title_en || news.title)}
         </h1>
 
         {news.image_url && (
           <div className="rounded-[48px] overflow-hidden mb-16 shadow-2xl">
-            <img src={news.image_url} alt="" className="w-full h-auto" />
+            <img src={news.image_url} alt="" className="w-full h-auto object-cover" />
           </div>
         )}
 
