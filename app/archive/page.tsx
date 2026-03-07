@@ -54,12 +54,11 @@ export default function ArchivePage() {
     async function getArchive() {
       if (selectedYear && selectedType && selectedCategory) {
         setLoading(true);
-        const yearQuery = selectedYear.replace(" он", "").replace(" year", ""); 
 
         const { data } = await supabase
           .from('archive')
           .select('*')
-          .eq('year', yearQuery) 
+          .eq('year', selectedYear)
           .eq('type_id', selectedType)
           .eq('category_id', selectedCategory);
         
@@ -115,7 +114,9 @@ export default function ArchivePage() {
               className="w-full p-4 bg-slate-50 rounded-2xl border-none font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer text-lg"
             >
               <option value="">{t('filter.select')}</option>
-              {YEARS.map(y => <option key={y} value={y}>{y} {lang === 'mn' ? 'он' : ''}</option>)}
+              {YEARS.map(y => (
+                <option key={y} value={`${y} он`}>{y} он</option>
+              ))}
             </select>
           </div>
 
@@ -210,7 +211,6 @@ export default function ArchivePage() {
   );
 }
 
-// Card Component
 function FileCard({ title, icon, url, color, t }: any) {
   const styles: any = {
     blue: "bg-blue-50 text-blue-600 hover:bg-blue-600 hover:shadow-blue-200",
