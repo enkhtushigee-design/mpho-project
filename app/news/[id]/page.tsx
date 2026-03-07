@@ -1,7 +1,4 @@
-Мэдээний дэлгэрэнгүй хуудас (news/[id]/page.tsx)-д гарчгийн өнгийг засья.
-
-app/news/[id]/page.tsx
-tsx"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
