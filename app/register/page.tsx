@@ -9,14 +9,18 @@ import { useLanguage } from "@/lib/LanguageContext";
 
 function generateStudentId(grade: string): string {
   const currentYear = new Date().getFullYear();
-  const random = Math.floor(Math.random() * 9000) + 1000;
   const gradeNum = parseInt(grade);
   const graduationYear = currentYear + (12 - gradeNum);
-  return `${graduationYear}${random}`;
+  const shortYear = String(graduationYear).slice(-2);
+  const random = Math.floor(Math.random() * 9000) + 1000;
+  return `${shortYear}${random}`;
 }
 
 function generateTeacherId(): string {
-  return String(Math.floor(Math.random() * 90000) + 10000);
+  const currentYear = new Date().getFullYear();
+  const shortYear = String(currentYear).slice(-2);
+  const random = Math.floor(Math.random() * 900) + 100;
+  return `${shortYear}${random}`;
 }
 
 export default function RegisterPage() {
@@ -105,7 +109,7 @@ export default function RegisterPage() {
           </p>
           <div className="bg-slate-950 text-white rounded-[24px] py-6 px-8 mb-8">
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">ТАНЫ ID ДУГААР</p>
-            <p className="text-5xl font-[1000] tracking-widest text-white">{generatedId}</p>
+            <p className="text-5xl font-[1000] tracking-widest">{generatedId}</p>
           </div>
           <Link href="/" className="block w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-sm hover:bg-blue-500 transition-all">
             Нүүр хуудас руу буцах
@@ -201,7 +205,7 @@ export default function RegisterPage() {
               <select name="grade" value={form.grade} onChange={handleChange}
                 className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer text-sm">
                 <option value="">Ангиа сонгоно уу</option>
-                {[1,2,3,4,5,6,7,8,9,10,11,12].map(g => (
+                {[7,8,9,10,11,12].map(g => (
                   <option key={g} value={String(g)}>{g}-р анги</option>
                 ))}
               </select>
