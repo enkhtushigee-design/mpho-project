@@ -2,59 +2,102 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
-import { ArrowRight, BookOpen, Newspaper, Globe, Menu, X, UserPlus } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowRight, BookOpen, Newspaper, Globe, Menu, X, UserPlus, User, LogOut, ShieldCheck } from "lucide-react";
 import { useLanguage } from "../lib/LanguageContext";
 import BackgroundSlider from "../components/BackgroundSlider";
 
 export default function Home() {
   const { t, lang, setLang } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("mpho_user");
+    if (stored) setUser(JSON.parse(stored));
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("mpho_user");
+    setUser(null);
+    setMenuOpen(false);
+  };
 
   return (
     <main className="min-h-screen relative isolate overflow-hidden font-sans text-white selection:bg-blue-500 selection:text-white">
-      
+
       <BackgroundSlider />
 
       <nav className="border-b border-white/10 sticky top-0 z-50 backdrop-blur-md bg-black/20">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-          
+
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <div className="relative w-8 h-8">
               <Image src="/logo.png" alt="MPHO Logo" fill className="object-contain" />
             </div>
-            <span className="text-base md:text-xl font-[1000] tracking-tighter uppercase italic text-white">
+            <span className="text-base md:text-xl font-black tracking-tighter uppercase italic text-white">
               MPHO.MN
             </span>
           </Link>
 
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
-            <Link href="/archive" className="px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
+            <Link href="/archive" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {t('nav.archive')}
             </Link>
-            <Link href="/international" className="px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
+            <Link href="/international" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {t('nav.intl_success')}
             </Link>
-            <Link href="/about" className="px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
+            <Link href="/materials" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
+              {lang === 'mn' ? 'МАТЕРИАЛ' : 'MATERIALS'}
+            </Link>
+            <Link href="/about" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {lang === 'mn' ? 'БИДНИЙ ТУХАЙ' : 'ABOUT'}
             </Link>
           </div>
 
+          {/* Desktop right */}
           <div className="flex items-center gap-2">
-            <Link href="/login" className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-[10px] font-black tracking-widest transition-all border border-white/10">
-              {lang === 'mn' ? 'НЭВТРЭХ' : 'LOGIN'}
-            </Link>
-            <Link href="/register" className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-full text-[10px] font-black tracking-widest transition-all">
-              <UserPlus size={11} />
-              {lang === 'mn' ? 'БҮРТГҮҮЛЭХ' : 'REGISTER'}
-            </Link>
-            <button 
+            {user ? (
+              <>
+                {user.role === "admin" && (
+                  <Link href="/admin" className="hidden md:flex items-center gap-2 px-4 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-400/30 rounded-full text-xs font-black tracking-widest transition-all text-yellow-300">
+                    <ShieldCheck size={11} />
+                    АДМИН
+                  </Link>
+                )}
+                <Link href="/profile" className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-xs font-black tracking-widest transition-all border border-white/10">
+                  <User size={11} />
+                  ПРОФАЙЛ
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-red-500/20 rounded-full text-xs font-black tracking-widest transition-all border border-white/10 text-white/70 hover:text-red-300"
+                >
+                  <LogOut size={11} />
+                  {lang === 'mn' ? 'ГАРАХ' : 'LOGOUT'}
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-xs font-black tracking-widest transition-all border border-white/10">
+                  {lang === 'mn' ? 'НЭВТРЭХ' : 'LOGIN'}
+                </Link>
+                <Link href="/register" className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-full text-xs font-black tracking-widest transition-all">
+                  <UserPlus size={11} />
+                  {lang === 'mn' ? 'БҮРТГҮҮЛЭХ' : 'REGISTER'}
+                </Link>
+              </>
+            )}
+
+            <button
               onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
-              className="flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-full text-[10px] font-black tracking-widest transition-all border border-white/10 active:scale-95"
+              className="flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-full text-xs font-black tracking-widest transition-all border border-white/10 active:scale-95"
             >
               <Globe size={11} />
               {lang === 'mn' ? 'EN' : 'MN'}
             </button>
+
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 bg-white/10 hover:bg-white/20 rounded-full border border-white/10 transition-all"
@@ -64,23 +107,46 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-white/10 bg-black/40 backdrop-blur-md px-6 py-4 flex flex-col gap-2">
-            <Link href="/archive" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
+            <Link href="/archive" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {t('nav.archive')}
             </Link>
-            <Link href="/international" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
+            <Link href="/international" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {t('nav.intl_success')}
             </Link>
-            <Link href="/about" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
+            <Link href="/materials" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
+              {lang === 'mn' ? 'МАТЕРИАЛ' : 'MATERIALS'}
+            </Link>
+            <Link href="/about" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {lang === 'mn' ? 'БИДНИЙ ТУХАЙ' : 'ABOUT'}
             </Link>
-            <Link href="/login" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
-              {lang === 'mn' ? 'НЭВТРЭХ' : 'LOGIN'}
-            </Link>
-            <Link href="/register" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-blue-400 hover:text-blue-300 transition-all">
-              {lang === 'mn' ? 'БҮРТГҮҮЛЭХ' : 'REGISTER'}
-            </Link>
+
+            {user ? (
+              <>
+                {user.role === "admin" && (
+                  <Link href="/admin" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-yellow-300 hover:text-yellow-200 transition-all border-b border-white/10">
+                    АДМИН ПАНЕЛ
+                  </Link>
+                )}
+                <Link href="/profile" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
+                  ПРОФАЙЛ
+                </Link>
+                <button onClick={handleLogout} className="py-3 text-left text-xs font-black tracking-widest uppercase text-red-400 hover:text-red-300 transition-all">
+                  {lang === 'mn' ? 'ГАРАХ' : 'LOGOUT'}
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
+                  {lang === 'mn' ? 'НЭВТРЭХ' : 'LOGIN'}
+                </Link>
+                <Link href="/register" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-blue-400 hover:text-blue-300 transition-all">
+                  {lang === 'mn' ? 'БҮРТГҮҮЛЭХ' : 'REGISTER'}
+                </Link>
+              </>
+            )}
           </div>
         )}
       </nav>
@@ -100,7 +166,7 @@ export default function Home() {
       </div>
 
       <div className="absolute bottom-6 left-0 right-0 text-center z-20">
-        <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] opacity-80">
+        <p className="text-slate-400 text-xs font-black uppercase tracking-widest opacity-80">
           © 2026 {t('home.physics_committee')}
         </p>
       </div>
