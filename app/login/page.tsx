@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
@@ -14,6 +14,11 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("mpho_user");
+    if (stored) window.location.href = "/profile";
+  }, []);
 
   const handleLogin = async () => {
     setError("");
@@ -38,7 +43,11 @@ export default function LoginPage() {
     }
 
     localStorage.setItem("mpho_user", JSON.stringify(data));
-    window.location.href = "/profile";
+    if (data.role === "admin") {
+      window.location.href = "/admin";
+    } else {
+      window.location.href = "/profile";
+    }
   };
 
   return (
@@ -50,7 +59,7 @@ export default function LoginPage() {
           </Link>
           <button
             onClick={() => setLang(lang === "mn" ? "en" : "mn")}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-950 text-white rounded-full text-[10px] font-black tracking-widest hover:bg-blue-700 transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-950 text-white rounded-full text-xs font-black tracking-widest hover:bg-blue-700 transition-all"
           >
             <Globe size={12} />
             {lang === "mn" ? "EN" : "MN"}
@@ -63,7 +72,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <h1 className="text-3xl font-[1000] italic uppercase tracking-tighter text-slate-950 text-center mb-2">
+        <h1 className="text-3xl font-black italic uppercase tracking-tighter text-slate-950 text-center mb-2">
           Нэвтрэх
         </h1>
         <p className="text-slate-400 font-bold text-sm text-center mb-8">
@@ -72,7 +81,7 @@ export default function LoginPage() {
 
         <div className="bg-white rounded-[40px] border border-slate-200 shadow-sm p-8 space-y-4">
           <div>
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">
+            <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">
               И-мэйл хаяг
             </label>
             <input
@@ -85,7 +94,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">
+            <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">
               Нууц үг
             </label>
             <div className="relative">
@@ -114,7 +123,7 @@ export default function LoginPage() {
           <button
             onClick={handleLogin}
             disabled={loading}
-            className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-[1000] text-sm transition-all shadow-lg disabled:opacity-50"
+            className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black text-sm transition-all shadow-lg disabled:opacity-50"
           >
             {loading ? "Нэвтэрч байна..." : "Нэвтрэх"}
           </button>
