@@ -68,14 +68,14 @@ export default function MaterialsPage() {
               <div className="relative w-7 h-7">
                 <Image src="/logo.png" alt="MPHO" fill className="object-contain" />
               </div>
-              <h1 className="text-xl font-[1000] tracking-tighter uppercase text-slate-950 italic">
+              <h1 className="text-xl font-black tracking-tighter uppercase text-slate-950 italic">
                 {lang === "mn" ? "Олон улсын материал" : "International Materials"}
               </h1>
             </div>
           </div>
           <button
             onClick={() => setLang(lang === "mn" ? "en" : "mn")}
-            className="flex items-center gap-2 px-5 py-2.5 bg-slate-950 text-white rounded-full text-[10px] font-black tracking-widest hover:bg-blue-700 transition-all shadow-lg"
+            className="flex items-center gap-2 px-5 py-2.5 bg-slate-950 text-white rounded-full text-xs font-black tracking-widest hover:bg-blue-700 transition-all shadow-lg"
           >
             <Globe size={14} />
             {lang === "mn" ? "EN" : "MN"}
@@ -85,13 +85,12 @@ export default function MaterialsPage() {
 
       <div className="max-w-5xl mx-auto px-6 pt-10">
 
-        {/* Olympiad filter */}
         <div className="flex gap-2 flex-wrap mb-8">
           {OLYMPIADS.map(o => (
             <button
               key={o}
               onClick={() => setOlympiadFilter(o)}
-              className={`px-5 py-2.5 rounded-full text-[11px] font-[1000] uppercase tracking-widest transition-all ${olympiadFilter === o ? "bg-slate-950 text-white shadow-lg" : "bg-white text-slate-500 border border-slate-200 hover:border-slate-400"}`}
+              className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all ${olympiadFilter === o ? "bg-slate-950 text-white shadow-lg" : "bg-white text-slate-500 border border-slate-200 hover:border-slate-400"}`}
             >
               {o}
             </button>
@@ -104,14 +103,14 @@ export default function MaterialsPage() {
           </div>
         ) : Object.keys(grouped).length === 0 ? (
           <div className="py-24 text-center">
-            <p className="text-slate-400 font-[1000] uppercase tracking-widest text-xs">Материал олдсонгүй</p>
+            <p className="text-slate-400 font-black uppercase tracking-widest text-xs">Материал олдсонгүй</p>
           </div>
         ) : (
           <div className="space-y-6">
             {Object.values(grouped).map((group: any) => (
-              <div key={`${group.olympiad}-${group.year}`} className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
+              <div key={`${group.olympiad}-${group.year}`} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="px-8 py-5 border-b border-slate-100 flex items-center gap-4">
-                  <span className="px-4 py-1.5 bg-slate-950 text-white rounded-full text-[10px] font-[1000] uppercase tracking-widest">
+                  <span className="px-4 py-1.5 bg-slate-950 text-white rounded-full text-xs font-black uppercase tracking-widest">
                     {group.olympiad}
                   </span>
                   <span className="text-slate-400 font-black text-sm">{group.year} он</span>
@@ -127,7 +126,7 @@ export default function MaterialsPage() {
                           <p className="font-bold text-slate-900 text-sm">
                             {lang === "mn" ? item.title : (item.title_en || item.title)}
                           </p>
-                          <span className={`inline-block mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-[1000] uppercase ${TYPE_COLORS[item.type] || "bg-slate-50 text-slate-500"}`}>
+                          <span className={`inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-black uppercase ${TYPE_COLORS[item.type] || "bg-slate-50 text-slate-500"}`}>
                             {TYPES[item.type] || item.type}
                           </span>
                         </div>
@@ -136,7 +135,7 @@ export default function MaterialsPage() {
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-[11px] font-[1000] transition-all"
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-black transition-all"
                       >
                         <ExternalLink size={13} />
                         {lang === "mn" ? "Үзэх" : "View"}
