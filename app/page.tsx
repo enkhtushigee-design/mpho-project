@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowRight, BookOpen, Newspaper, Globe, Menu, X } from "lucide-react";
+import { ArrowRight, BookOpen, Newspaper, Globe, Menu, X, UserPlus } from "lucide-react";
 import { useLanguage } from "../lib/LanguageContext";
 import BackgroundSlider from "../components/BackgroundSlider";
 
@@ -41,6 +41,13 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Link href="/login" className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-[10px] font-black tracking-widest transition-all border border-white/10">
+              {lang === 'mn' ? 'НЭВТРЭХ' : 'LOGIN'}
+            </Link>
+            <Link href="/register" className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-full text-[10px] font-black tracking-widest transition-all">
+              <UserPlus size={11} />
+              {lang === 'mn' ? 'БҮРТГҮҮЛЭХ' : 'REGISTER'}
+            </Link>
             <button 
               onClick={() => setLang(lang === 'mn' ? 'en' : 'mn')}
               className="flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-full text-[10px] font-black tracking-widest transition-all border border-white/10 active:scale-95"
@@ -48,7 +55,6 @@ export default function Home() {
               <Globe size={11} />
               {lang === 'mn' ? 'EN' : 'MN'}
             </button>
-
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 bg-white/10 hover:bg-white/20 rounded-full border border-white/10 transition-all"
@@ -66,8 +72,14 @@ export default function Home() {
             <Link href="/international" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {t('nav.intl_success')}
             </Link>
-            <Link href="/about" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white transition-all">
+            <Link href="/about" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {lang === 'mn' ? 'БИДНИЙ ТУХАЙ' : 'ABOUT'}
+            </Link>
+            <Link href="/login" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
+              {lang === 'mn' ? 'НЭВТРЭХ' : 'LOGIN'}
+            </Link>
+            <Link href="/register" onClick={() => setMenuOpen(false)} className="py-3 text-[11px] font-black tracking-widest uppercase text-blue-400 hover:text-blue-300 transition-all">
+              {lang === 'mn' ? 'БҮРТГҮҮЛЭХ' : 'REGISTER'}
             </Link>
           </div>
         )}
@@ -75,18 +87,11 @@ export default function Home() {
 
       <div className="flex flex-col items-center justify-center min-h-[85vh] px-6 text-center relative z-20">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
-          <Link 
-            href="/archive" 
-            className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg shadow-blue-900/50 border border-blue-500 text-sm"
-          >
+          <Link href="/archive" className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg shadow-blue-900/50 border border-blue-500 text-sm">
             <BookOpen size={18} />
             <span>{t('nav.archive')}</span>
           </Link>
-          
-          <Link 
-            href="/news" 
-            className="w-full sm:w-auto px-6 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-2xl font-bold transition-all backdrop-blur-md flex items-center justify-center gap-2 hover:border-white/40 text-sm"
-          >
+          <Link href="/news" className="w-full sm:w-auto px-6 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-2xl font-bold transition-all backdrop-blur-md flex items-center justify-center gap-2 hover:border-white/40 text-sm">
             <Newspaper size={18} />
             <span>{t('home.browse_updates')}</span>
             <ArrowRight size={16} />
