@@ -84,7 +84,6 @@ export default function MaterialsPage() {
       </nav>
 
       <div className="max-w-5xl mx-auto px-6 pt-10">
-
         <div className="flex gap-2 flex-wrap mb-8">
           {OLYMPIADS.map(o => (
             <button
@@ -131,7 +130,7 @@ export default function MaterialsPage() {
                           </span>
                         </div>
                       </div>
-                      
+                      <a
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
