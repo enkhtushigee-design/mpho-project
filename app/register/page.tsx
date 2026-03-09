@@ -7,20 +7,48 @@ import { supabase } from "@/lib/supabase";
 import { ArrowLeft, Eye, EyeOff, Globe } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
 
-function generateStudentId(grade: string): string {
+async function generateStudentId(grade: string): Promise<string> {
   const currentYear = new Date().getFullYear();
   const gradeNum = parseInt(grade);
   const graduationYear = currentYear + (12 - gradeNum);
   const shortYear = String(graduationYear).slice(-2);
-  const random = Math.floor(Math.random() * 9000) + 1000;
-  return `${shortYear}${random}`;
+
+  let id = "";
+  let exists = true;
+
+  while (exists) {
+    const random = Math.floor(Math.random() * 9000) + 1000;
+    id = `${shortYear}${random}`;
+    const { data } = await supabase
+      .from("users")
+      .select("id")
+      .eq("student_id", id)
+      .single();
+    exists = !!data;
+  }
+
+  return id;
 }
 
-function generateTeacherId(): string {
+async function generateTeacherId(): Promise<string> {
   const currentYear = new Date().getFullYear();
   const shortYear = String(currentYear).slice(-2);
-  const random = Math.floor(Math.random() * 900) + 100;
-  return `${shortYear}${random}`;
+
+  let id = "";
+  let exists = true;
+
+  while (exists) {
+    const random = Math.floor(Math.random() * 900) + 100;
+    id = `${shortYear}${random}`;
+    const { data } = await supabase
+      .from("users")
+      .select("id")
+      .eq("student_id", id)
+      .single();
+    exists = !!data;
+  }
+
+  return id;
 }
 
 export default function RegisterPage() {
@@ -61,8 +89,8 @@ export default function RegisterPage() {
     setLoading(true);
 
     const studentId = role === "student"
-      ? generateStudentId(form.grade)
-      : generateTeacherId();
+      ? await generateStudentId(form.grade)
+      : await generateTeacherId();
 
     const { error: dbError } = await supabase.from("users").insert({
       student_id: studentId,
