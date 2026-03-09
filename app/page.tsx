@@ -40,13 +40,15 @@ export default function Home() {
             </span>
           </Link>
 
-          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
             <Link href="/archive" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {t('nav.archive')}
             </Link>
             <Link href="/international" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {t('nav.intl_success')}
+            </Link>
+            <Link href="/selection" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
+              {lang === 'mn' ? 'ШАЛГАРУУЛАЛТ' : 'SELECTION'}
             </Link>
             <Link href="/materials" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {lang === 'mn' ? 'МАТЕРИАЛ' : 'MATERIALS'}
@@ -56,7 +58,6 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Desktop right */}
           <div className="flex items-center gap-2">
             {user ? (
               <>
@@ -107,7 +108,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-white/10 bg-black/40 backdrop-blur-md px-6 py-4 flex flex-col gap-2">
             <Link href="/archive" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
@@ -116,13 +116,15 @@ export default function Home() {
             <Link href="/international" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {t('nav.intl_success')}
             </Link>
+            <Link href="/selection" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
+              {lang === 'mn' ? 'ШАЛГАРУУЛАЛТ' : 'SELECTION'}
+            </Link>
             <Link href="/materials" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {lang === 'mn' ? 'МАТЕРИАЛ' : 'MATERIALS'}
             </Link>
             <Link href="/about" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {lang === 'mn' ? 'БИДНИЙ ТУХАЙ' : 'ABOUT'}
             </Link>
-
             {user ? (
               <>
                 {user.role === "admin" && (
