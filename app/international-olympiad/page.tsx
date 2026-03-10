@@ -11,11 +11,9 @@ export default function InternationalOlympiadPage() {
   const { lang, setLang } = useLanguage();
   const [tab, setTab] = useState<"selection" | "materials">("selection");
 
-  // Materials
   const [materials, setMaterials] = useState<any[]>([]);
   const [matLoading, setMatLoading] = useState(true);
 
-  // Selection
   const [years, setYears] = useState<string[]>([]);
   const [selectedYear, setSelectedYear] = useState("");
   const [rows, setRows] = useState<any[]>([]);
@@ -102,7 +100,6 @@ export default function InternationalOlympiadPage() {
 
       <div className="max-w-6xl mx-auto px-6 pt-10">
 
-        {/* Tabs */}
         <div className="flex gap-2 mb-10 bg-white p-2 rounded-[24px] border border-slate-200 shadow-sm w-fit">
           <button
             onClick={() => setTab("selection")}
@@ -118,7 +115,6 @@ export default function InternationalOlympiadPage() {
           </button>
         </div>
 
-        {/* SELECTION TAB */}
         {tab === "selection" && (
           <>
             {years.length > 0 && (
@@ -185,7 +181,6 @@ export default function InternationalOlympiadPage() {
           </>
         )}
 
-        {/* MATERIALS TAB */}
         {tab === "materials" && (
           <div className="max-w-3xl">
             <p className="text-slate-400 font-bold text-sm mb-8">
@@ -205,7 +200,7 @@ export default function InternationalOlympiadPage() {
             ) : (
               <div className="space-y-4">
                 {materials.map((m) => (
-                  
+                  <a
                     key={m.id}
                     href={m.url}
                     target="_blank"
