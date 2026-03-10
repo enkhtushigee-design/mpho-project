@@ -23,7 +23,7 @@ export default function SelectionPage() {
         .select("school_year, olympiad")
         .order("school_year", { ascending: false });
       if (data) {
-        const unique = Array.from(new Set(data.map(d => d.school_year)));
+        const unique = Array.from(new Set(data.map((d) => d.school_year)));
         setYears(unique);
         if (unique.length > 0) setSelectedYear(unique[0]);
       }
@@ -85,7 +85,7 @@ export default function SelectionPage() {
 
         {years.length > 0 && (
           <div className="flex gap-2 flex-wrap mb-8">
-            {years.map(y => (
+            {years.map((y) => (
               <button
                 key={y}
                 onClick={() => setSelectedYear(y)}
@@ -119,7 +119,7 @@ export default function SelectionPage() {
                 <thead>
                   <tr className="border-b border-slate-100">
                     <th className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">#</th>
-                    {columns.map(col => (
+                    {columns.map((col) => (
                       <th key={col} className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">
                         {col}
                       </th>
@@ -132,7 +132,7 @@ export default function SelectionPage() {
                       <td className="px-6 py-4">
                         <span className="font-black text-slate-300 text-sm">{i + 1}</span>
                       </td>
-                      {columns.map(col => (
+                      {columns.map((col) => (
                         <td key={col} className="px-6 py-4">
                           <span className="font-medium text-slate-700 text-sm">{row[col] ?? "—"}</span>
                         </td>
