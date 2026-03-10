@@ -63,13 +63,13 @@ export default function MaterialsPage() {
             <p className="text-slate-400 font-black uppercase tracking-widest text-xs animate-pulse">Ачааллаж байна...</p>
           </div>
         ) : materials.length === 0 ? (
-          <div className="py-24 text-center bg-white rounded-[32px] border border-slate-200">
+          <div className="py-24 text-center bg-white rounded-3xl border border-slate-200">
             <p className="text-slate-400 font-black uppercase tracking-widest text-xs">Мэдээлэл байхгүй байна</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {materials.map(m => (
-              
+            {materials.map((m) => (
+              <a
                 key={m.id}
                 href={m.url}
                 target="_blank"
