@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import { ArrowLeft, Search, Users, GraduationCap, BookOpen, Download, Plus, X, Upload } from "lucide-react";
+import { ArrowLeft, Search, Users, GraduationCap, BookOpen, Download, X, Upload, Plus } from "lucide-react";
 import * as XLSX from "xlsx";
 
 export default function AdminPage() {
@@ -21,12 +21,12 @@ export default function AdminPage() {
   const [showAddMaterial, setShowAddMaterial] = useState(false);
   const [matLoading, setMatLoading] = useState(false);
   const [matForm, setMatForm] = useState({
-    olympiad: "IPhO",
-    year: "",
-    title: "",
-    title_en: "",
+    name: "",
+    full_name: "",
+    full_name_en: "",
+    description: "",
+    description_en: "",
     url: "",
-    type: "problem",
   });
 
   // Selection state
@@ -66,7 +66,7 @@ export default function AdminPage() {
     const { data } = await supabase
       .from("materials")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: true });
     if (data) setMaterials(data);
   }
 
@@ -79,11 +79,11 @@ export default function AdminPage() {
   }
 
   async function addMaterial() {
-    if (!matForm.year || !matForm.title || !matForm.url) return;
+    if (!matForm.name || !matForm.full_name || !matForm.url) return;
     setMatLoading(true);
     await supabase.from("materials").insert(matForm);
     await fetchMaterials();
-    setMatForm({ olympiad: "IPhO", year: "", title: "", title_en: "", url: "", type: "problem" });
+    setMatForm({ name: "", full_name: "", full_name_en: "", description: "", description_en: "", url: "" });
     setShowAddMaterial(false);
     setMatLoading(false);
   }
@@ -193,16 +193,18 @@ export default function AdminPage() {
             </Link>
             <h1 className="text-2xl font-black tracking-tighter uppercase text-slate-950 italic">Админ панел</h1>
           </div>
-          {tab === "users" && (
-            <button onClick={exportCSV} className="flex items-center gap-2 px-5 py-2.5 bg-slate-950 text-white rounded-full text-xs font-black tracking-widest hover:bg-blue-700 transition-all shadow-lg">
-              <Download size={14} /> CSV татах
-            </button>
-          )}
-          {tab === "materials" && (
-            <button onClick={() => setShowAddMaterial(true)} className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-full text-xs font-black tracking-widest hover:bg-blue-500 transition-all shadow-lg">
-              <Plus size={14} /> Материал нэмэх
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {tab === "users" && (
+              <button onClick={exportCSV} className="flex items-center gap-2 px-5 py-2.5 bg-slate-950 text-white rounded-full text-xs font-black tracking-widest hover:bg-blue-700 transition-all shadow-lg">
+                <Download size={14} /> CSV татах
+              </button>
+            )}
+            {tab === "materials" && (
+              <button onClick={() => setShowAddMaterial(true)} className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-full text-xs font-black tracking-widest hover:bg-blue-500 transition-all shadow-lg">
+                <Plus size={14} /> Нэмэх
+              </button>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -327,16 +329,18 @@ export default function AdminPage() {
               </div>
             ) : (
               materials.map(m => (
-                <div key={m.id} className="bg-white rounded-[24px] border border-slate-200 shadow-sm px-6 py-4 flex items-center justify-between">
+                <div key={m.id} className="bg-white rounded-[24px] border border-slate-200 shadow-sm px-6 py-5 flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <span className="px-3 py-1 bg-slate-950 text-white rounded-full text-xs font-black uppercase">{m.olympiad}</span>
-                    <span className="text-slate-400 font-bold text-xs">{m.year} он</span>
-                    <span className="font-bold text-slate-900 text-sm">{m.title}</span>
-                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-black uppercase ${m.type === "problem" ? "bg-blue-50 text-blue-600" : m.type === "solution" ? "bg-purple-50 text-purple-600" : "bg-green-50 text-green-600"}`}>
-                      {m.type === "problem" ? "Бодлого" : m.type === "solution" ? "Бодолт" : "Дүн"}
-                    </span>
+                    <div className="w-12 h-12 rounded-2xl bg-slate-950 flex items-center justify-center font-black text-xs text-white shrink-0">
+                      {m.name}
+                    </div>
+                    <div>
+                      <p className="font-black text-slate-900 text-sm">{m.full_name}</p>
+                      {m.description && <p className="text-slate-400 font-medium text-xs mt-0.5">{m.description}</p>}
+                      <p className="text-blue-500 font-bold text-xs mt-0.5">{m.url}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 shrink-0">
                     <a href={m.url} target="_blank" rel="noopener noreferrer"
                       className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-xs font-black hover:bg-blue-100 transition-all">
                       Үзэх
@@ -355,8 +359,6 @@ export default function AdminPage() {
         {/* SELECTION TAB */}
         {tab === "selection" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            {/* Upload form */}
             <div className="bg-white rounded-[40px] border border-slate-200 shadow-sm p-8 space-y-4 h-fit">
               <h2 className="text-xl font-black uppercase tracking-tighter text-slate-950 italic">
                 XLSX файл оруулах
@@ -364,7 +366,6 @@ export default function AdminPage() {
               <p className="text-slate-400 font-medium text-sm">
                 Excel файлын эхний мөр нь багануудын гарчиг байх ёстой
               </p>
-
               <div>
                 <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Хичээлийн жил</label>
                 <input
@@ -374,7 +375,6 @@ export default function AdminPage() {
                   className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
               </div>
-
               <div>
                 <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Олимпиад</label>
                 <select
@@ -385,7 +385,6 @@ export default function AdminPage() {
                   {["APhO", "IPhO", "EuPhO", "IZhO"].map(o => <option key={o}>{o}</option>)}
                 </select>
               </div>
-
               <div>
                 <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">XLSX файл</label>
                 <label className="flex items-center justify-center gap-3 w-full p-6 border-2 border-dashed border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
@@ -402,7 +401,6 @@ export default function AdminPage() {
                   />
                 </label>
               </div>
-
               {selectionError && (
                 <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
                   <p className="text-red-600 font-bold text-sm">{selectionError}</p>
@@ -415,7 +413,6 @@ export default function AdminPage() {
               )}
             </div>
 
-            {/* Uploaded list */}
             <div className="space-y-3">
               <h2 className="text-lg font-black uppercase tracking-tighter text-slate-950 italic px-2">
                 Оруулсан файлууд
@@ -446,51 +443,46 @@ export default function AdminPage() {
       {/* Add Material Modal */}
       {showAddMaterial && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center px-6">
-          <div className="bg-white rounded-[40px] p-8 w-full max-w-md shadow-2xl">
+          <div className="bg-white rounded-[40px] p-8 w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-black uppercase tracking-tighter text-slate-950 italic">Материал нэмэх</h2>
               <button onClick={() => setShowAddMaterial(false)} className="p-2 hover:bg-slate-100 rounded-full transition">
                 <X size={20} />
               </button>
             </div>
-
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Олимпиад</label>
-                <select value={matForm.olympiad} onChange={e => setMatForm({...matForm, olympiad: e.target.value})}
-                  className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-sm cursor-pointer">
-                  {["IPhO", "APhO", "EuPhO", "IZhO"].map(o => <option key={o}>{o}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Он</label>
-                <input value={matForm.year} onChange={e => setMatForm({...matForm, year: e.target.value})}
-                  placeholder="2024"
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Товч нэр (жишээ: IPhO)</label>
+                <input value={matForm.name} onChange={e => setMatForm({...matForm, name: e.target.value})}
+                  placeholder="IPhO"
                   className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
               </div>
               <div>
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Гарчиг (МН)</label>
-                <input value={matForm.title} onChange={e => setMatForm({...matForm, title: e.target.value})}
-                  placeholder="жишээ нь: IPhO 2024 Бодлого"
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Бүтэн нэр (МН)</label>
+                <input value={matForm.full_name} onChange={e => setMatForm({...matForm, full_name: e.target.value})}
+                  placeholder="Олон улсын физикийн олимпиад"
                   className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
               </div>
               <div>
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Гарчиг (EN)</label>
-                <input value={matForm.title_en} onChange={e => setMatForm({...matForm, title_en: e.target.value})}
-                  placeholder="e.g.: IPhO 2024 Problems"
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Бүтэн нэр (EN)</label>
+                <input value={matForm.full_name_en} onChange={e => setMatForm({...matForm, full_name_en: e.target.value})}
+                  placeholder="International Physics Olympiad"
                   className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
               </div>
               <div>
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Төрөл</label>
-                <select value={matForm.type} onChange={e => setMatForm({...matForm, type: e.target.value})}
-                  className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-sm cursor-pointer">
-                  <option value="problem">Бодлого</option>
-                  <option value="solution">Бодолт</option>
-                  <option value="result">Дүн</option>
-                </select>
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Тайлбар (МН)</label>
+                <input value={matForm.description} onChange={e => setMatForm({...matForm, description: e.target.value})}
+                  placeholder="Олимпиадын тухай товч тайлбар"
+                  className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
               </div>
               <div>
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">PDF линк (URL)</label>
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Тайлбар (EN)</label>
+                <input value={matForm.description_en} onChange={e => setMatForm({...matForm, description_en: e.target.value})}
+                  placeholder="Brief description in English"
+                  className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+              </div>
+              <div>
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Вэбсайтын линк</label>
                 <input value={matForm.url} onChange={e => setMatForm({...matForm, url: e.target.value})}
                   placeholder="https://..."
                   className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
