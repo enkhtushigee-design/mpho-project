@@ -40,10 +40,12 @@ export default function Home() {
             </span>
           </Link>
 
-          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
             <Link href="/archive" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {t('nav.archive')}
+            </Link>
+            <Link href="/news" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
+              {lang === 'mn' ? 'МЕДЭЭ' : 'NEWS'}
             </Link>
             <Link href="/international-olympiad" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {lang === 'mn' ? 'ОЛОН УЛСЫН ОЛИМПИАД' : 'INTERNATIONAL'}
@@ -53,7 +55,6 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Desktop right */}
           <div className="flex items-center gap-2">
             {user ? (
               <>
@@ -104,11 +105,13 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-white/10 bg-black/40 backdrop-blur-md px-6 py-4 flex flex-col gap-2">
             <Link href="/archive" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {t('nav.archive')}
+            </Link>
+            <Link href="/news" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
+              {lang === 'mn' ? 'МЕДЭЭ' : 'NEWS'}
             </Link>
             <Link href="/international-olympiad" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {lang === 'mn' ? 'ОЛОН УЛСЫН ОЛИМПИАД' : 'INTERNATIONAL'}
@@ -119,7 +122,7 @@ export default function Home() {
             {user ? (
               <>
                 {user.role === "admin" && (
-                  <Link href="/admin" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-yellow-300 hover:text-yellow-200 transition-all border-b border-white/10">
+                  <Link href="/admin" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-yellow-300 transition-all border-b border-white/10">
                     АДМИН ПАНЕЛ
                   </Link>
                 )}
