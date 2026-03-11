@@ -93,18 +93,15 @@ const IPHO_ACHIEVEMENTS = [
 ];
 
 const getAwardStyle = (award: string) => {
-  if (award.includes("Алтан") || award.includes("Gold"))
-    return { badge: "bg-yellow-50 text-yellow-700 border border-yellow-200", icon: "🥇" };
-  if (award.includes("Мөнгөн") || award.includes("Silver"))
-    return { badge: "bg-slate-100 text-slate-700 border border-slate-200", icon: "🥈" };
-  if (award.includes("Хүрэл") || award.includes("Bronze"))
-    return { badge: "bg-orange-50 text-orange-700 border border-orange-200", icon: "🥉" };
+  if (award.includes("Алтан") || award.includes("Gold")) return { badge: "bg-yellow-50 text-yellow-700 border border-yellow-200", icon: "🥇" };
+  if (award.includes("Мөнгөн") || award.includes("Silver")) return { badge: "bg-slate-100 text-slate-700 border border-slate-200", icon: "🥈" };
+  if (award.includes("Хүрэл") || award.includes("Bronze")) return { badge: "bg-orange-50 text-orange-700 border border-orange-200", icon: "🥉" };
   return { badge: "bg-blue-50 text-blue-700 border border-blue-200", icon: "⭐" };
 };
 
 export default function InternationalOlympiadPage() {
   const { lang, setLang } = useLanguage();
-  const [tab, setTab] = useState<"international" | "selection" | "material">("international");
+  const [tab, setTab] = useState<"results" | "selection" | "links">("results");
   const [resultsTab, setResultsTab] = useState<"ipho" | "apho">("ipho");
 
   const [materials, setMaterials] = useState<any[]>([]);
@@ -167,14 +164,11 @@ export default function InternationalOlympiadPage() {
     fetchSelectionData();
   }, [selectedYear]);
 
-  const iphoGrouped = IPHO_ACHIEVEMENTS.reduce(
-    (acc: Record<number, typeof IPHO_ACHIEVEMENTS>, curr) => {
-      if (!acc[curr.year]) acc[curr.year] = [];
-      acc[curr.year].push(curr);
-      return acc;
-    },
-    {}
-  );
+  const iphoGrouped = IPHO_ACHIEVEMENTS.reduce((acc: Record<number, typeof IPHO_ACHIEVEMENTS>, curr) => {
+    if (!acc[curr.year]) acc[curr.year] = [];
+    acc[curr.year].push(curr);
+    return acc;
+  }, {});
   const iphoYears = Object.keys(iphoGrouped).sort((a, b) => Number(b) - Number(a));
 
   return (
@@ -208,8 +202,8 @@ export default function InternationalOlympiadPage() {
 
         <div className="flex gap-2 mb-10 bg-white p-2 rounded-[24px] border border-slate-200 shadow-sm w-fit">
           <button
-            onClick={() => setTab("international")}
-            className={`px-6 py-2.5 rounded-[18px] font-black text-sm transition-all ${tab === "international" ? "bg-slate-950 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"}`}
+            onClick={() => setTab("results")}
+            className={`px-6 py-2.5 rounded-[18px] font-black text-sm transition-all ${tab === "results" ? "bg-slate-950 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"}`}
           >
             {lang === "mn" ? "Амжилтууд" : "Results"}
           </button>
@@ -220,14 +214,15 @@ export default function InternationalOlympiadPage() {
             {lang === "mn" ? "Шалгаруулалт" : "Selection"}
           </button>
           <button
-            onClick={() => setTab("material")}
-            className={`px-6 py-2.5 rounded-[18px] font-black text-sm transition-all ${tab === "material" ? "bg-slate-950 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"}`}
+            onClick={() => setTab("links")}
+            className={`px-6 py-2.5 rounded-[18px] font-black text-sm transition-all ${tab === "links" ? "bg-slate-950 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"}`}
           >
             {lang === "mn" ? "Холбоосууд" : "Links"}
           </button>
         </div>
 
-        {tab === "international" && (
+        {/* RESULTS TAB */}
+        {tab === "results" && (
           <>
             <div className="flex gap-2 mb-8 bg-white p-2 rounded-[20px] border border-slate-200 shadow-sm w-fit">
               <button
@@ -260,7 +255,7 @@ export default function InternationalOlympiadPage() {
                         {entries.map((res, idx) => {
                           const style = getAwardStyle(res.award);
                           return (
-                            <div key={idx} className="bg-white rounded-[24px] border border-slate-200 px-6 py-4 flex items-center justify-between hover:shadow-md hover:border-slate-300 transition-all group">
+                            <div key={idx} className="bg-white rounded-[24px] border border-slate-200 px-6 py-4 flex items-center justify-between hover:shadow-md hover:border-slate-300 transition-all">
                               <div className="flex items-center gap-4">
                                 <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center border border-slate-100 text-base">
                                   {style.icon}
@@ -298,6 +293,7 @@ export default function InternationalOlympiadPage() {
           </>
         )}
 
+        {/* SELECTION TAB */}
         {tab === "selection" && (
           <>
             {years.length > 0 && (
@@ -357,7 +353,8 @@ export default function InternationalOlympiadPage() {
           </>
         )}
 
-        {tab === "material" && (
+        {/* LINKS TAB */}
+        {tab === "links" && (
           <div className="max-w-3xl">
             <p className="text-slate-400 font-bold text-sm mb-8">
               {lang === "mn"
@@ -388,11 +385,11 @@ export default function InternationalOlympiadPage() {
                       </div>
                       <div>
                         <p className="font-black text-slate-950 text-base tracking-tight">
-                          {lang === "mn" ? m.full_name : m.full_name_en || m.full_name}
+                          {lang === "mn" ? m.full_name : (m.full_name_en || m.full_name)}
                         </p>
                         {(m.description || m.description_en) && (
                           <p className="text-slate-500 font-medium text-sm mt-1 max-w-md">
-                            {lang === "mn" ? m.description : m.description_en || m.description}
+                            {lang === "mn" ? m.description : (m.description_en || m.description)}
                           </p>
                         )}
                         <p className="text-slate-400 font-bold text-xs mt-1">{m.url}</p>
@@ -407,7 +404,6 @@ export default function InternationalOlympiadPage() {
             )}
           </div>
         )}
-
       </div>
     </main>
   );
