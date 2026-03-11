@@ -45,7 +45,7 @@ export default function Home() {
               {t('nav.archive')}
             </Link>
             <Link href="/news" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
-              {lang === 'mn' ? 'МЕДЭЭ' : 'NEWS'}
+              {lang === 'mn' ? 'МЭДЭЭ' : 'NEWS'}
             </Link>
             <Link href="/international-olympiad" className="px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase text-white/80 hover:text-white hover:bg-white/10 transition-all">
               {lang === 'mn' ? 'ОЛОН УЛСЫН ОЛИМПИАД' : 'INTERNATIONAL'}
@@ -111,7 +111,7 @@ export default function Home() {
               {t('nav.archive')}
             </Link>
             <Link href="/news" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
-              {lang === 'mn' ? 'МЕДЭЭ' : 'NEWS'}
+              {lang === 'mn' ? 'МЭДЭЭ' : 'NEWS'}
             </Link>
             <Link href="/international-olympiad" onClick={() => setMenuOpen(false)} className="py-3 text-xs font-black tracking-widest uppercase text-white/80 hover:text-white transition-all border-b border-white/10">
               {lang === 'mn' ? 'ОЛОН УЛСЫН ОЛИМПИАД' : 'INTERNATIONAL'}
@@ -147,7 +147,7 @@ export default function Home() {
         )}
       </nav>
 
-      <div className="flex flex-col items-center justify-center min-h-[85vh] px-6 text-center relative z-20">
+      <div className="flex flex-col items-center justify-end min-h-[85vh] pb-24 px-6 text-center relative z-20">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
           <Link href="/archive" className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg shadow-blue-900/50 border border-blue-500 text-sm">
             <BookOpen size={18} />
