@@ -5,7 +5,10 @@ import Image from "next/image";
 
 const images = [
   "/bg1.jpg",
-  "/bg2.jpg"
+  "/bg2.jpg",
+  "/bg3.jpg",
+  "/bg4.jpg",
+  "/bg5.jpg"
 ];
 
 export default function BackgroundSlider() {
