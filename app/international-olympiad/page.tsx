@@ -99,6 +99,9 @@ const getAwardStyle = (award: string) => {
   return { badge: "bg-blue-50 text-blue-700 border border-blue-200", icon: "⭐" };
 };
 
+// Baganii neriin whitespace, newline-iig normalize hiine
+const normalizeKey = (k: string) => k.replace(/\r\n|\r|\n/g, " ").trim().toLowerCase();
+
 export default function InternationalOlympiadPage() {
   const { lang, setLang } = useLanguage();
   const [tab, setTab] = useState<"results" | "selection" | "links">("results");
@@ -153,15 +156,20 @@ export default function InternationalOlympiadPage() {
       if (data) {
         const tableData = data.data as any[];
         setOlympiad(data.olympiad || "APhO");
-        setRows(tableData);
-        if (tableData.length > 0) {
-          console.log("RAW KEYS:", Object.keys(tableData[0]));
-          const preferredOrder = ["№", "Овог", "Нэр", "Сургууль", "Ханд", "Их Сорил", "Шигшээ сорилго", "Сорил 1", "Сорил 2", "Нийслэл", "Улс", "Нийт"];
-          const allKeys = Object.keys(tableData[0]);
-          setColumns([
-            ...preferredOrder.filter((k) => allKeys.includes(k)),
-            ...allKeys.filter((k) => !preferredOrder.includes(k)),
-          ]);
+
+        // Supabase-д columns тусдаа хадgалсан бол ашиглана
+        if (data.columns && Array.isArray(data.columns) && data.columns.length > 0) {
+          setColumns(data.columns);
+          setRows(tableData);
+        } else {
+          // columns байхгүй бол orig xlsx дарааллыг хадгалсан байна гэж үзэж
+          // normalize хийж JSON key дарааллыг хадгална
+          setRows(tableData);
+          if (tableData.length > 0) {
+            const allKeys = Object.keys(tableData[0]);
+            // Normalize хийж display name болгоно (newline зайгаар солино)
+            setColumns(allKeys);
+          }
         }
       } else {
         setRows([]);
@@ -338,7 +346,9 @@ export default function InternationalOlympiadPage() {
                       <tr className="border-b border-slate-100">
                         <th className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">#</th>
                         {columns.map((col) => (
-                          <th key={col} className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">{col}</th>
+                          <th key={col} className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">
+                            {col.replace(/\r\n|\r|\n/g, " ").trim()}
+                          </th>
                         ))}
                       </tr>
                     </thead>
