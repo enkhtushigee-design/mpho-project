@@ -99,8 +99,18 @@ const getAwardStyle = (award: string) => {
   return { badge: "bg-blue-50 text-blue-700 border border-blue-200", icon: "⭐" };
 };
 
-// Baganii neriin whitespace, newline-iig normalize hiine
-const normalizeKey = (k: string) => k.replace(/\r\n|\r|\n/g, " ").trim().toLowerCase();
+// Багана нэрийг normalize хийх
+const normalizeKey = (k: string) => k.replace(/\r\n|\r|\n/g, " ").trim();
+
+// Row-оос normalize хийсэн key-р утга авах
+const getRowValue = (row: any, col: string) => {
+  // Шууд таарвал
+  if (row[col] !== undefined) return row[col];
+  // Normalize хийж таарвал
+  const normalizedCol = normalizeKey(col);
+  const match = Object.entries(row).find(([k]) => normalizeKey(k) === normalizedCol);
+  return match ? match[1] : undefined;
+};
 
 export default function InternationalOlympiadPage() {
   const { lang, setLang } = useLanguage();
@@ -156,20 +166,13 @@ export default function InternationalOlympiadPage() {
       if (data) {
         const tableData = data.data as any[];
         setOlympiad(data.olympiad || "APhO");
-
-        // Supabase-д columns тусдаа хадgалсан бол ашиглана
+        setRows(tableData);
         if (data.columns && Array.isArray(data.columns) && data.columns.length > 0) {
-          setColumns(data.columns);
-          setRows(tableData);
-        } else {
-          // columns байхгүй бол orig xlsx дарааллыг хадгалсан байна гэж үзэж
-          // normalize хийж JSON key дарааллыг хадгална
-          setRows(tableData);
-          if (tableData.length > 0) {
-            const allKeys = Object.keys(tableData[0]);
-            // Normalize хийж display name болгоно (newline зайгаар солино)
-            setColumns(allKeys);
-          }
+          // Supabase-д хадгалсан columns дарааллыг ашиглана
+          setColumns(data.columns.map((c: string) => normalizeKey(c)));
+        } else if (tableData.length > 0) {
+          // columns байхгүй бол JSON key-г ашиглана
+          setColumns(Object.keys(tableData[0]).map(normalizeKey));
         }
       } else {
         setRows([]);
@@ -347,7 +350,7 @@ export default function InternationalOlympiadPage() {
                         <th className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">#</th>
                         {columns.map((col) => (
                           <th key={col} className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">
-                            {col.replace(/\r\n|\r|\n/g, " ").trim()}
+                            {col}
                           </th>
                         ))}
                       </tr>
@@ -358,7 +361,9 @@ export default function InternationalOlympiadPage() {
                           <td className="px-6 py-4"><span className="font-black text-slate-300 text-sm">{i + 1}</span></td>
                           {columns.map((col) => (
                             <td key={col} className="px-6 py-4">
-                              <span className="font-medium text-slate-700 text-sm">{row[col] ?? "—"}</span>
+                              <span className="font-medium text-slate-700 text-sm">
+                                {getRowValue(row, col) ?? "—"}
+                              </span>
                             </td>
                           ))}
                         </tr>
