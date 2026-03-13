@@ -154,7 +154,15 @@ export default function InternationalOlympiadPage() {
         const tableData = data.data as any[];
         setOlympiad(data.olympiad || "APhO");
         setRows(tableData);
-        if (tableData.length > 0) setColumns(Object.keys(tableData[0]));
+        if (tableData.length > 0) {
+          console.log("RAW KEYS:", Object.keys(tableData[0]));
+          const preferredOrder = ["№", "Овог", "Нэр", "Сургууль", "Ханд", "Их Сорил", "Шигшээ сорилго", "Сорил 1", "Сорил 2", "Нийслэл", "Улс", "Нийт"];
+          const allKeys = Object.keys(tableData[0]);
+          setColumns([
+            ...preferredOrder.filter((k) => allKeys.includes(k)),
+            ...allKeys.filter((k) => !preferredOrder.includes(k)),
+          ]);
+        }
       } else {
         setRows([]);
         setColumns([]);
@@ -371,8 +379,8 @@ export default function InternationalOlympiadPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {materials.map((m) => (<a
-                  
+                {materials.map((m) => (
+                  <a
                     key={m.id}
                     href={m.url}
                     target="_blank"
