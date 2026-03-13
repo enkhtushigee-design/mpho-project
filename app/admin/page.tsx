@@ -16,7 +16,6 @@ export default function AdminPage() {
   const [checking, setChecking] = useState(true);
   const [tab, setTab] = useState<"users" | "materials" | "selection">("users");
 
-  // Materials state
   const [materials, setMaterials] = useState<any[]>([]);
   const [showAddMaterial, setShowAddMaterial] = useState(false);
   const [matLoading, setMatLoading] = useState(false);
@@ -29,7 +28,6 @@ export default function AdminPage() {
     url: "",
   });
 
-  // Selection state
   const [selectionYear, setSelectionYear] = useState("");
   const [selectionOlympiad, setSelectionOlympiad] = useState("APhO");
   const [selectionUploading, setSelectionUploading] = useState(false);
@@ -112,6 +110,11 @@ export default function AdminPage() {
       const bstr = evt.target?.result;
       const wb = XLSX.read(bstr, { type: "binary" });
       const ws = wb.Sheets[wb.SheetNames[0]];
+
+      // Баганын дарааллыг xlsx-ээс шууд авна
+      const headers = (XLSX.utils.sheet_to_json(ws, { header: 1 })[0] as string[]).map(
+        (h) => String(h).replace(/\r\n|\r|\n/g, " ").trim()
+      );
       const jsonData = XLSX.utils.sheet_to_json(ws);
 
       const { error } = await supabase
@@ -120,6 +123,7 @@ export default function AdminPage() {
           school_year: selectionYear,
           olympiad: selectionOlympiad,
           data: jsonData,
+          columns: headers,
         }, { onConflict: "school_year" });
 
       setSelectionUploading(false);
@@ -210,7 +214,6 @@ export default function AdminPage() {
 
       <div className="max-w-7xl mx-auto px-6 pt-10">
 
-        {/* Tabs */}
         <div className="flex gap-2 mb-8 bg-white p-2 rounded-[24px] border border-slate-200 shadow-sm w-fit">
           <button onClick={() => setTab("users")}
             className={`px-6 py-2.5 rounded-[18px] font-black text-sm transition-all ${tab === "users" ? "bg-slate-950 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"}`}>
