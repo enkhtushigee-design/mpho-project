@@ -111,11 +111,27 @@ export default function AdminPage() {
       const wb = XLSX.read(bstr, { type: "binary" });
       const ws = wb.Sheets[wb.SheetNames[0]];
 
-      // Баганын дарааллыг xlsx-ээс шууд авна
-      const headers = (XLSX.utils.sheet_to_json(ws, { header: 1 })[0] as string[]).map(
-        (h) => String(h).replace(/\r\n|\r|\n/g, " ").trim()
+      const allRows = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
+
+      const headerRowIndex = allRows.findIndex(
+        (row) => row.some((cell) => cell !== null && cell !== undefined && cell !== "")
       );
-      const jsonData = XLSX.utils.sheet_to_json(ws);
+
+      const headers = allRows[headerRowIndex].map((h: any) =>
+        String(h ?? "").replace(/\r\n|\r|\n/g, " ").trim()
+      );
+
+      const dataRows = allRows.slice(headerRowIndex + 1).filter(
+        (row) => row.some((cell) => cell !== null && cell !== undefined && cell !== "")
+      );
+
+      const jsonData = dataRows.map((row) => {
+        const obj: any = {};
+        headers.forEach((h, i) => {
+          obj[h] = row[i] ?? null;
+        });
+        return obj;
+      });
 
       const { error } = await supabase
         .from("selection")
