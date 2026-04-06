@@ -111,35 +111,21 @@ export default function AdminPage() {
       const wb = XLSX.read(bstr, { type: "binary" });
       const ws = wb.Sheets[wb.SheetNames[0]];
 
-      const allRows = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
+      // Бүх мөрийг raw array болгон авна, ямар ч боловсруулалтгүй
+      const allRows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null }) as any[][];
 
-      const headerRowIndex = allRows.findIndex(
+      // Бүрэн хоосон мөрүүдийг хасна
+      const filteredRows = allRows.filter(
         (row) => row.some((cell) => cell !== null && cell !== undefined && cell !== "")
       );
-
-      const headers = allRows[headerRowIndex].map((h: any) =>
-        String(h ?? "").replace(/\r\n|\r|\n/g, " ").trim()
-      );
-
-      const dataRows = allRows.slice(headerRowIndex + 1).filter(
-        (row) => row.some((cell) => cell !== null && cell !== undefined && cell !== "")
-      );
-
-      const jsonData = dataRows.map((row) => {
-        const obj: any = {};
-        headers.forEach((h, i) => {
-          obj[h] = row[i] ?? null;
-        });
-        return obj;
-      });
 
       const { error } = await supabase
         .from("selection")
         .upsert({
           school_year: selectionYear,
           olympiad: selectionOlympiad,
-          data: jsonData,
-          columns: headers,
+          data: filteredRows,
+          columns: [],
         }, { onConflict: "school_year" });
 
       setSelectionUploading(false);
@@ -383,7 +369,7 @@ export default function AdminPage() {
                 XLSX файл оруулах
               </h2>
               <p className="text-slate-400 font-medium text-sm">
-                Excel файлын эхний мөр нь багануудын гарчиг байх ёстой
+                Ямар ч бүтэцтэй Excel файл оруулж болно
               </p>
               <div>
                 <label className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 block">Хичээлийн жил</label>
