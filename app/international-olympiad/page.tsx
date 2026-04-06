@@ -381,7 +381,7 @@ export default function InternationalOlympiadPage() {
             ) : (
               <div className="space-y-4">
                 {materials.map((m) => (
-                  
+                  <a
                     key={m.id}
                     href={m.url}
                     target="_blank"
