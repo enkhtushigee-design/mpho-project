@@ -99,19 +99,6 @@ const getAwardStyle = (award: string) => {
   return { badge: "bg-blue-50 text-blue-700 border border-blue-200", icon: "⭐" };
 };
 
-// Багана нэрийг normalize хийх
-const normalizeKey = (k: string) => k.replace(/\r\n|\r|\n/g, " ").trim();
-
-// Row-оос normalize хийсэн key-р утга авах
-const getRowValue = (row: any, col: string) => {
-  // Шууд таарвал
-  if (row[col] !== undefined) return row[col];
-  // Normalize хийж таарвал
-  const normalizedCol = normalizeKey(col);
-  const match = Object.entries(row).find(([k]) => normalizeKey(k) === normalizedCol);
-  return match ? match[1] : undefined;
-};
-
 export default function InternationalOlympiadPage() {
   const { lang, setLang } = useLanguage();
   const [tab, setTab] = useState<"results" | "selection" | "links">("results");
@@ -122,7 +109,7 @@ export default function InternationalOlympiadPage() {
 
   const [years, setYears] = useState<string[]>([]);
   const [selectedYear, setSelectedYear] = useState("");
-  const [rows, setRows] = useState<any[]>([]);
+  const [rows, setRows] = useState<any[][]>([]);
   const [columns, setColumns] = useState<string[]>([]);
   const [selLoading, setSelLoading] = useState(false);
   const [olympiad, setOlympiad] = useState("APhO");
@@ -164,15 +151,17 @@ export default function InternationalOlympiadPage() {
         .eq("school_year", selectedYear)
         .single();
       if (data) {
-        const tableData = data.data as any[];
+        const rawRows = data.data as any[][];
         setOlympiad(data.olympiad || "APhO");
-        setRows(tableData);
-        if (data.columns && Array.isArray(data.columns) && data.columns.length > 0) {
-          // Supabase-д хадгалсан columns дарааллыг ашиглана
-          setColumns(data.columns.map((c: string) => normalizeKey(c)));
-        } else if (tableData.length > 0) {
-          // columns байхгүй бол JSON key-г ашиглана
-          setColumns(Object.keys(tableData[0]).map(normalizeKey));
+        if (rawRows && rawRows.length > 0) {
+          // Эхний мөрийг header болгон авна
+          const headerRow = rawRows[0] as any[];
+          const dataRows = rawRows.slice(1);
+          setColumns(headerRow.map((h: any) => String(h ?? "").replace(/\r\n|\r|\n/g, " ").trim()));
+          setRows(dataRows);
+        } else {
+          setColumns([]);
+          setRows([]);
         }
       } else {
         setRows([]);
@@ -341,15 +330,13 @@ export default function InternationalOlympiadPage() {
                 <div className="px-8 py-5 border-b border-slate-100 flex items-center gap-4">
                   <span className="px-4 py-1.5 bg-slate-950 text-white rounded-full text-xs font-black uppercase tracking-widest">{olympiad}</span>
                   <span className="text-slate-400 font-black text-sm">{selectedYear} оны шалгаруулалт</span>
-                  <span className="text-slate-400 font-bold text-xs">{rows.length} оролцогч</span>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-slate-100">
-                        <th className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">#</th>
-                        {columns.map((col) => (
-                          <th key={col} className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">
+                        {columns.map((col, i) => (
+                          <th key={i} className="text-left px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">
                             {col}
                           </th>
                         ))}
@@ -358,11 +345,10 @@ export default function InternationalOlympiadPage() {
                     <tbody>
                       {rows.map((row, i) => (
                         <tr key={i} className={`border-b border-slate-50 hover:bg-slate-50 transition-colors ${i % 2 === 0 ? "" : "bg-slate-50/50"}`}>
-                          <td className="px-6 py-4"><span className="font-black text-slate-300 text-sm">{i + 1}</span></td>
-                          {columns.map((col) => (
-                            <td key={col} className="px-6 py-4">
+                          {columns.map((_, j) => (
+                            <td key={j} className="px-6 py-4">
                               <span className="font-medium text-slate-700 text-sm">
-                                {getRowValue(row, col) ?? "—"}
+                                {row[j] ?? "—"}
                               </span>
                             </td>
                           ))}
@@ -395,7 +381,7 @@ export default function InternationalOlympiadPage() {
             ) : (
               <div className="space-y-4">
                 {materials.map((m) => (
-                  <a
+                  
                     key={m.id}
                     href={m.url}
                     target="_blank"
